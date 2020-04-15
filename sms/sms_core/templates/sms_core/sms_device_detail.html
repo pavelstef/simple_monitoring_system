@@ -1,0 +1,35 @@
+{% extends "sms_core/sms_base_nav.html" %}
+{% load static %}
+
+{% block title %}SMS: Device detail - {{ device.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div>
+            <h2>Detail information about device: </h2>
+        </div>
+
+        <div class="card bg-light">
+            <div class="card-header">
+                Device name: {{ device.name }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Device IP / FQDN: {{ device.ip_fqdn}}</h5>
+                {% if device.status %}
+                    <p class="card-text"><b>Device status: UP</b></p>
+                {% else %}
+                    <p class="card-text"><b>Device status: DOWN</b></p>
+                {% endif %}
+                <p class="card-text">Device in current status since: {{ device.last_status_changed|date:"d M Y H:i" }}</p>
+                <p class="card-text">Device check interval: every {{ device.check_interval }} minutes.</p>
+                <hr>
+                <p class="card-text">Device description: {{ device.description }}</p>
+                <p class="card-text">Device on monitoring since: {{ device.created_at|date:"d M Y H:i" }}</p>
+                <p class="card-text">The last time the device was edited by <b>{{ device.updated_by }}</b> at <b>{{ device.updated_at|date:"d M Y H:i" }}</b></p>
+
+                <a type="button" class="btn btn-secondary" href="{% url 'url_devices_overview' %}">Cancel</a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

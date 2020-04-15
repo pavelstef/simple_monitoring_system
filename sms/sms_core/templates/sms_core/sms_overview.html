@@ -1,0 +1,66 @@
+{% extends "sms_core/sms_base_nav.html" %}
+{% load static %}
+
+{% block title %}SMS: Overview{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sms_core/sms_overview.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" id="row-button__add-device">
+            <div class="col-2 offset-md-10">
+
+                {% if request.user.is_staff %}
+                    <a type="button" class="btn btn-secondary" href="{% url 'url_device_add' %}">Add device</a>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div>
+            <h2>Observed devices [{{ devices|length }}]:</h2>
+        </div>
+
+        {% for device in devices %}
+
+            {% if device.status %}
+
+                <div class="card text-white bg-success mb-1">
+                    <div class="card-header">
+                        {{ device.name }} -- In status UP since: {{ device.last_status_changed|date:"d M Y H:i" }}
+                        <a href="{{ device.get_absolute_url }}" class="btn btn-secondary btn-sm">More...</a>
+                        {% if request.user.is_staff %}
+                        <a href="{% url 'url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="card text-white bg-danger mb-1">
+                    <div class="card-header">
+                        {{ device.name }} -- In status DOWN since: {{ device.last_status_changed|date:"d M Y H:i" }}
+                        <a href="{{ device.get_absolute_url }}" class="btn btn-secondary btn-sm">More...</a>
+                        {% if request.user.is_staff %}
+                        <a href="{% url 'url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        window.setTimeout(function () {
+            location.href = "{% url 'url_devices_overview' %}";
+        }, 300000); // refresh after 300 seconds (5 minutes)
+    </script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "sms_core/sms_base_nav.html" %}
+{% load static %}
+
+{% block title %}SMS: Deleting - {{ obj }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        {% if request.user.is_staff %}
+
+            <form action="{{ obj.get_delete_url }}" method="post">
+
+                {% csrf_token %}
+
+                <div class="card text-white bg-warning mb-5">
+                    <div class="card-header">Attention!</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Do you realy want to delete <b>{{ obj.name}}</b> ?</h5>
+                    </div>
+                </div>
+
+                <div class="col-4 offset-md-8">
+                    <a type="button" class="btn btn-secondary" href="{% url redirect_url %}">Cancel</a>
+                    <button type="submit" class="btn btn-warning">Yes, Delete it!</button>
+                </div>
+
+            </form>
+
+        {% endif%}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "sms_core/sms_base.html" %}
+{% load static %}
+
+{% if request.user.is_authenticated %}
+
+    {% block nav %}
+         <div class="bg-light" style="text-align: center; font-size: 20px; text-transform: uppercase; color: #737373;">
+                 Simple Monitoring System developed by Pavel Stefanenko
+         </div>
+
+        <nav class="navbar navbar-light bg-light" style="margin-bottom: 10px">
+            <div id="navbar-links">
+                <a class="btn btn-secondary" href="{% url 'url_devices_overview' %}">Home</a>
+                {% if request.user.is_staff and 'administration' not in request.path %}
+                    <a class="btn btn-secondary" href="{% url 'url_administration' %}">Administration</a>
+                {% endif %}
+            </div>
+
+            {% if 'overview' in request.path %}
+                <form class="form-inline" action="{% url 'url_devices_overview' %}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" value="{{ search }}">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </form>
+            {% endif %}
+            {% if 'administration' in request.path %}
+                <form class="form-inline" action="{% url 'url_administration' %}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" value="{{ search }}">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </form>
+            {% endif %}
+
+            <form class="form-inline" id="navbar-logout">
+                <span style="font-size: 18px; color: #737373; margin-right: 10px">
+                    User: <a href="{{ request.user.get_absolute_url }}">{{ request.user.name }}</a>
+                </span>
+                <a href="{% url 'url_logout' %}" class="btn btn-secondary" type="submit">LogOut</a>
+            </form>
+        </nav>
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+{% endif %}

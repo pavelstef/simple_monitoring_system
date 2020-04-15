@@ -1,0 +1,56 @@
+{% extends "sms_core/sms_base_nav.html" %}
+{% load static %}
+
+{% block title %}SMS: User edit - {{ obj }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div>
+            <h2>Self service for {{ obj }}: </h2>
+        </div>
+
+        {% if success %}
+            <div class="alert alert-success" role="alert">
+                The user has been edited successfully!
+            </div>
+        {% endif %}
+
+        <form action="{{ obj.get_absolute_url }}" method="post">
+
+                {% csrf_token %}
+
+            <div class="form-group">
+
+                <label>Username:</label>
+                <b>{{ form.name.errors }}</b>
+                {{ form.name }}
+                <small class="form-text text-muted">
+                    The username must be 3-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </small>
+
+                <label>New password:</label>
+                <b>{{ form.password1.errors }}</b>
+                {{ form.password1 }}
+                <small class="form-text text-muted">
+                    The password must be 3-30 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </small>
+
+                <label>Confirm new password:</label>
+                <b>{{ form.password2.errors }}</b>
+                {{ form.password2 }}
+                <small class="form-text text-muted">
+                    The password must be 3-30 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </small>
+
+            </div>
+
+            <div class="col-2 offset-md-10">
+                <a type="button" class="btn btn-secondary" href="{% url 'url_devices_overview' %}">Cancel</a>
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+
+        </form>
+
+    </div>
+{% endblock %}
