@@ -15,8 +15,6 @@ Admin user - admin/admin (hope for your conscience :) )
 
 The application was developed and tested on computers Linux Mint 19.3 (python 3.6.9) and Ubuntu 19.10 (python 3.7.5).
 
-## A server preparation.
-
 + Installation of packages.
 ```
         sudo apt update
