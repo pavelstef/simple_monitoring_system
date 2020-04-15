@@ -4,7 +4,9 @@ A simple application designed to control the availability of network devices in 
 
 # How is it looks (demo stand):
 http://171.25.166.69:51413/
+
 Read-only user - user/user
+
 Admin user - admin/admin (hope for your conscience :) )
 
 **Please, do not use the demo stand as a production server. The database will be restored every night.**
@@ -36,7 +38,9 @@ Pull the project from the github and prepare a virtual environment.
 
 Make sure that you set parameters such as SECRET_KEY and DB_PASSWORD in the environment variables,
 or edit the file **project_folder/sms/.env**
+
 Edit the scripts in the folder **<project_folder>/sms/bin/** according to your settings
+
 Edit the gunicorn configuration file - **<project_folder>/sms/gunicorn_config.py**
 
 + MySQL.
