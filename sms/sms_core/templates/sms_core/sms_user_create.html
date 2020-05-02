@@ -23,25 +23,25 @@
 
                     {% csrf_token %}
 
-                    <label>Username:</label>
+                    <label>{{ form.name.label }}</label>
                     <b>{{ form.name.errors }}</b>
                     {{ form.name }}
                     <small class="form-text text-muted">
-                        The username must be 3-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                        {{ form.name.help_text}}
                     </small>
 
-                    <label>Password:</label>
+                    <label>{{ form.password1.label }}</label>
                     <b>{{ form.password1.errors }}</b>
                     {{ form.password1 }}
                     <small class="form-text text-muted">
-                        The password must be 3-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                       {{ form.password1.help_text }}
                     </small>
 
-                    <label>Confirm password:</label>
+                    <label>{{ form.password2.label }}</label>
                     <b>{{ form.password2.errors }}</b>
                     {{ form.password2 }}
                     <small class="form-text text-muted">
-                        The password must be 3-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                        {{ form.password2.help_text }}
                     </small>
 
                 </div>
@@ -49,7 +49,7 @@
                 <div class="form-group col-4 ml-3" style="padding-left: 0px;">
                     <b>{{ form.is_staff.errors }}</b>
                     {{ form.is_staff }}
-                    <label><b>Grant user administrator's permission?</b></label>
+                    <label><b>{{ form.is_staff.label }}</b></label>
                 </div>
 
                 <div class="col-4 offset-md-10">

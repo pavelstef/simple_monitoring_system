@@ -4,7 +4,7 @@ from django.test import SimpleTestCase
 from django.urls import reverse
 
 
-class URLTestsCommon(SimpleTestCase):
+class URLCommonTests(SimpleTestCase):
     """ Tests access to common pages """
 
     def test_homepage_redirect(self):
@@ -25,7 +25,7 @@ class URLTestsCommon(SimpleTestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class URLTestsUnauthorized(SimpleTestCase):
+class URLUnauthorizedTests(SimpleTestCase):
     """
     Tests access unauthorized user to protected pages.
     All of the pages should redirect unauthorized user to the login page.

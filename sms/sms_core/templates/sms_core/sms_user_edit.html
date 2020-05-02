@@ -22,25 +22,25 @@
 
             <div class="form-group">
 
-                <label>Username:</label>
+                <label>{{ form.name.label }}</label>
                 <b>{{ form.name.errors }}</b>
                 {{ form.name }}
                 <small class="form-text text-muted">
-                    The username must be 3-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    {{ form.name.help_text}}
                 </small>
 
-                <label>New password:</label>
+                <label>{{ form.password1.label }}</label>
                 <b>{{ form.password1.errors }}</b>
                 {{ form.password1 }}
                 <small class="form-text text-muted">
-                    The password must be 3-30 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    {{ form.password1.help_text }}
                 </small>
 
-                <label>Confirm new password:</label>
+                <label>{{ form.password2.label }}</label>
                 <b>{{ form.password2.errors }}</b>
                 {{ form.password2 }}
                 <small class="form-text text-muted">
-                    The password must be 3-30 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    {{ form.password2.help_text }}
                 </small>
 
             </div>

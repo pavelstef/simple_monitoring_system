@@ -29,8 +29,8 @@ class SmsUser(AbstractUser):
 
     objects = SmsUserManager()
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
     def get_absolute_url(self) -> str:
         """ Get absolute URL to edit model's instance """
@@ -69,22 +69,22 @@ class Device(models.Model):
         on_delete=models.PROTECT
     )
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """ Get absolute URL to show model's instance details """
         return reverse('url_device_detail', kwargs={'slug': self.name})
 
-    def get_edit_url(self):
+    def get_edit_url(self) -> str:
         """ Get absolute URL to edit model's instance """
         return reverse('url_device_edit', kwargs={'slug': self.name})
 
-    def get_delete_url(self):
+    def get_delete_url(self) -> str:
         """ Get absolute URL to delete model's instance """
         return reverse('url_device_dell', kwargs={'slug': self.name})
 
-    def set_status(self, status: bool):
+    def set_status(self, status: bool) -> None:
         """
         Setting model's instance status:
         True - UP, reachable

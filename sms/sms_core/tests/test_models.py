@@ -5,8 +5,10 @@ from django.utils import timezone, dateformat
 from sms_core.models import SmsUser, Device
 
 
-class SmsUserModelTest(TestCase):
+class SmsUserModelTests(TestCase):
     """ Test for custom user model SmsUser """
+
+    model = SmsUser
 
     @classmethod
     def setUpTestData(cls):
@@ -15,33 +17,26 @@ class SmsUserModelTest(TestCase):
         )
         SmsUser.objects.create_user(name='test_user', password='test_user')
 
-    def test_name_label(self):
-        admin = SmsUser.objects.get(name='test_admin')
-        user = SmsUser.objects.get(name='test_user')
-        field_label_admin = admin._meta.get_field('name').verbose_name
-        field_label_user = user._meta.get_field('name').verbose_name
-        self.assertEqual(field_label_admin, 'name')
-        self.assertEqual(field_label_user, 'name')
-
     def test_get_absolute_url(self):
-        admin = SmsUser.objects.get(name='test_admin')
-        user = SmsUser.objects.get(name='test_user')
+        admin = self.model.objects.get(name='test_admin')
+        user = self.model.objects.get(name='test_user')
         self.assertEqual(admin.get_absolute_url(), '/sms/user/edit/test_admin/')
         self.assertEqual(user.get_absolute_url(), '/sms/user/edit/test_user/')
 
     def test_get_delete_url(self):
-        admin = SmsUser.objects.get(name='test_admin')
-        user = SmsUser.objects.get(name='test_user')
+        admin = self.model.objects.get(name='test_admin')
+        user = self.model.objects.get(name='test_user')
         self.assertEqual(admin.get_delete_url(), '/sms/user/delete/test_admin/')
         self.assertEqual(user.get_delete_url(), '/sms/user/delete/test_user/')
 
     def test_set_deleted(self):
-        admin = SmsUser.objects.get(name='test_admin')
-        user = SmsUser.objects.get(name='test_user')
+        admin = self.model.objects.get(name='test_admin')
+        user = self.model.objects.get(name='test_user')
         admin.set_deleted()
         user.set_deleted()
         self.assertFalse(admin.is_active)
         self.assertFalse(user.is_active)
+        # The name must be changed on <name>_deleted_at_<date and time>
         self.assertEqual(
             admin.name,
             f'test_admin_deleted_at_{dateformat.format(timezone.now(), "Y-m-d_H:i")}'
@@ -52,8 +47,10 @@ class SmsUserModelTest(TestCase):
         )
 
 
-class DeviceModelTest(TestCase):
+class DeviceModelTests(TestCase):
     """ Tests for Device's model """
+
+    model = Device
 
     @classmethod
     def setUpTestData(cls):
@@ -64,28 +61,25 @@ class DeviceModelTest(TestCase):
         Device.objects.create(
             name='test_device',
             ip_fqdn='1.1.1.1',
+            check_interval=5,
             updated_by=user
         )
 
-    def test_name_label(self):
-        device = Device.objects.get(name='test_device')
-        field_label = device._meta.get_field('name').verbose_name
-        self.assertEqual(field_label, 'name')
-
     def test_get_absolute_url(self):
-        device = Device.objects.get(name='test_device')
+        device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_absolute_url(), '/sms/device/detail/test_device/')
 
     def test_get_edit_url(self):
-        device = Device.objects.get(name='test_device')
+        device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_edit_url(), '/sms/device/edit/test_device/')
 
     def test_get_delete_url(self):
-        device = Device.objects.get(name='test_device')
+        device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_delete_url(), '/sms/device/delete/test_device/')
 
-    def test_set_status(self):
-        device = Device.objects.get(name='test_device')
+    def test_set_status_valid(self):
+        # The status must be a boolean
+        device = self.model.objects.get(name='test_device')
         self.assertFalse(device.status)
         device.set_status(True)
         self.assertGreater(
@@ -93,5 +87,10 @@ class DeviceModelTest(TestCase):
             timezone.now() - timezone.timedelta(minutes=1)
         )
         self.assertTrue(device.status)
+
+    def test_set_status_invalid(self):
+        # The status must be a boolean
+        device = self.model.objects.get(name='test_device')
+        self.assertFalse(device.status)
         with self.assertRaises(ValueError):
             device.set_status('UP')
