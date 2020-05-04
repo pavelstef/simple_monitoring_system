@@ -37,6 +37,8 @@ Pull the project from the github and prepare a virtual environment.
 Make sure that you set parameters such as SECRET_KEY and DB_PASSWORD in the environment variables,
 or edit the file **project_folder/sms/.env**
 
+Use https://djecrety.ir/ to generate your own SECRET_KEY
+
 Edit the scripts in the folder **<project_folder>/sms/bin/** according to your settings
 
 Edit the gunicorn configuration file - **<project_folder>/sms/gunicorn_config.py**
