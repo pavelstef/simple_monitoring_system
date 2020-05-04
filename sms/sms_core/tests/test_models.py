@@ -2,6 +2,7 @@
 
 from django.test import TestCase
 from django.utils import timezone, dateformat
+
 from sms_core.models import SmsUser, Device
 
 
@@ -11,25 +12,25 @@ class SmsUserModelTests(TestCase):
     model = SmsUser
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         SmsUser.objects.create_superuser(
             name='test_admin', password='test_admin'
         )
         SmsUser.objects.create_user(name='test_user', password='test_user')
 
-    def test_get_absolute_url(self):
+    def test_get_absolute_url(self) -> None:
         admin = self.model.objects.get(name='test_admin')
         user = self.model.objects.get(name='test_user')
         self.assertEqual(admin.get_absolute_url(), '/sms/user/edit/test_admin/')
         self.assertEqual(user.get_absolute_url(), '/sms/user/edit/test_user/')
 
-    def test_get_delete_url(self):
+    def test_get_delete_url(self) -> None:
         admin = self.model.objects.get(name='test_admin')
         user = self.model.objects.get(name='test_user')
         self.assertEqual(admin.get_delete_url(), '/sms/user/delete/test_admin/')
         self.assertEqual(user.get_delete_url(), '/sms/user/delete/test_user/')
 
-    def test_set_deleted(self):
+    def test_set_deleted(self) -> None:
         admin = self.model.objects.get(name='test_admin')
         user = self.model.objects.get(name='test_user')
         admin.set_deleted()
@@ -53,11 +54,10 @@ class DeviceModelTests(TestCase):
     model = Device
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         # The device model has obligatory field - foreign key to the user model.
         # So, we need to create a user object model for testing the device model.
-        SmsUser.objects.create_user(name='user', password='user')
-        user = SmsUser.objects.get(name='user')
+        user = SmsUser.objects.create_user(name='user', password='user')
         Device.objects.create(
             name='test_device',
             ip_fqdn='1.1.1.1',
@@ -65,22 +65,23 @@ class DeviceModelTests(TestCase):
             updated_by=user
         )
 
-    def test_get_absolute_url(self):
+    def test_get_absolute_url(self) -> None:
         device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_absolute_url(), '/sms/device/detail/test_device/')
 
-    def test_get_edit_url(self):
+    def test_get_edit_url(self) -> None:
         device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_edit_url(), '/sms/device/edit/test_device/')
 
-    def test_get_delete_url(self):
+    def test_get_delete_url(self) -> None:
         device = self.model.objects.get(name='test_device')
         self.assertEqual(device.get_delete_url(), '/sms/device/delete/test_device/')
 
-    def test_set_status_valid(self):
+    def test_set_status_valid(self) -> None:
         # The status must be a boolean
         device = self.model.objects.get(name='test_device')
         self.assertFalse(device.status)
+
         device.set_status(True)
         self.assertGreater(
             device.last_status_changed,
@@ -88,7 +89,7 @@ class DeviceModelTests(TestCase):
         )
         self.assertTrue(device.status)
 
-    def test_set_status_invalid(self):
+    def test_set_status_invalid(self) -> None:
         # The status must be a boolean
         device = self.model.objects.get(name='test_device')
         self.assertFalse(device.status)

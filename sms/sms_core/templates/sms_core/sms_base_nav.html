@@ -18,13 +18,13 @@
 
             {% if 'overview' in request.path %}
                 <form class="form-inline" action="{% url 'url_devices_overview' %}">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" value="{{ search }}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search by name" aria-label="Search" name="search" value="{{ search }}">
                     <button class="btn btn-secondary" type="submit">Search</button>
                 </form>
             {% endif %}
             {% if 'administration' in request.path %}
                 <form class="form-inline" action="{% url 'url_administration' %}">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" value="{{ search }}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search by name" aria-label="Search" name="search" value="{{ search }}">
                     <button class="btn btn-secondary" type="submit">Search</button>
                 </form>
             {% endif %}

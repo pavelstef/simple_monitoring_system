@@ -9,11 +9,10 @@
 
 {% block content %}
     <div class="container">
-        <div class="row" id="row-button__add-device">
+        {% if request.user.is_staff %}
+        <div class="row">
             <div class="col-2 offset-md-10">
-                {% if request.user.is_staff %}
-                    <a type="button" class="btn btn-secondary" href="{% url 'url_user_create' %}">Add user</a>
-                {% endif %}
+                <a type="button" class="btn btn-secondary" href="{% url 'url_user_create' %}">Add user</a>
             </div>
         </div>
 
@@ -22,28 +21,26 @@
         </div>
 
         <div>
-           {% if request.user.is_staff %}
-
-                {% for user in smsusers %}
-                    {% if user.is_active %}
-                        <div class="card bg-light">
-                            <div class="card-header">
-                                {{ user.name }}
-                                {% if request.user.is_staff %}
-                                <a href="{{ user.get_delete_url }}" class="btn btn-danger btn-sm">Delete</a>
-                                {% endif %}
-                            </div>
-                            <div class="card-body">
-                                <p class="card-title"><b>Is the user admin: {{ user.is_staff }}</b></p>
-                                <p class="card-text">User created at: {{ user.date_joined|date:"d M Y H:i" }}, User updated at {{ user.updated_at|date:"d M Y H:i" }}</p>
-                            </div>
+            {% for user in smsusers %}
+                {% if user.is_active %}
+                    <div class="card bg-light">
+                        <div class="card-header">
+                            {{ user.name }}
+                            {% if request.user.is_staff %}
+                            <a href="{{ user.get_delete_url }}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                {% endfor %}
-
-            {% endif %}
-
+                        <div class="card-body">
+                            <p class="card-title"><b>Is the user admin: {{ user.is_staff }}</b></p>
+                            <p class="card-text">User created at: {{ user.date_joined|date:"d M Y H:i" }},
+                                User updated at {{ user.updated_at|date:"d M Y H:i" }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
+
+        {% endif %}
 
     </div>
 
