@@ -7,18 +7,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/sms_core/favicon-32x32.png' %}">
     <title>{% block title %}{% endblock %}</title>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}"></link>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     {%block styles %}{% endblock %}
 
-    <script type="text/javascript" src="{% static 'jquery/jquery-3.4.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    {% block scripts %}{% endblock %}
 </head>
-<body style="font-family: 'Poppins', sans-serif";>
+<body style="font-family: 'Poppins', sans-serif;">
     {% block nav %}
     {% endblock %}
 
     {% block content %}
     {% endblock %}
+
+    <script type="text/javascript" src="{% static 'jquery/jquery-3.4.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

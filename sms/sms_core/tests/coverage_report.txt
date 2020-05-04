@@ -1,0 +1,36 @@
+coverage run --source=sms_core manage.py test sms_core
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+..................................................................
+----------------------------------------------------------------------
+Ran 68 tests in 38.074s
+
+OK
+Destroying test database for alias 'default'...
+
+
+coverage report -m
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+sms_core/__init__.py                            0      0   100%
+sms_core/admin.py                               1      0   100%
+sms_core/apps.py                                3      0   100%
+sms_core/forms.py                              81      2    98%   225, 232
+sms_core/managers.py                           18      3    83%   18, 35, 38
+sms_core/migrations/0001_initial.py             8      0   100%
+sms_core/migrations/__init__.py                 0      0   100%
+sms_core/models.py                             53      0   100%
+sms_core/tasks.py                              44     33    25%   17-22, 28-29, 35-70
+sms_core/tests/__init__.py                      0      0   100%
+sms_core/tests/test_forms.py                   93      0   100%
+sms_core/tests/test_models.py                  54      0   100%
+sms_core/tests/test_views_authorized.py       240      0   100%
+sms_core/tests/test_views_unauthorized.py      44      0   100%
+sms_core/tests/tests_tasks.py                   0      0   100%
+sms_core/tests/tests_utils.py                  27      0   100%
+sms_core/urls.py                                3      0   100%
+sms_core/utils/__init__.py                      0      0   100%
+sms_core/utils/devices_utils.py                24      0   100%
+sms_core/views.py                             164     12    93%   120, 170-181
+-------------------------------------------------------------------------
+TOTAL                                         857     50    94%

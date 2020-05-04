@@ -21,6 +21,7 @@ class ObjectDetailMixin:
     def get(self, request, slug):
         obj = get_object_or_404(self.model, name__iexact=slug)
         context = {self.model.__name__.lower(): obj}
+        del obj
         return render(request, self.template, context=context)
 
 
@@ -43,6 +44,8 @@ class ObjectListMixin:
             f'{self.model.__name__.lower()}s': objs,
             'search': search_query
         }
+        del search_query
+        del objs
         return render(request, self.template, context=context)
 
 
@@ -54,6 +57,7 @@ class ObjectCreateMixin:
     def get(self, request):
         form = self.form_model()
         context = {'form': form}
+        del form
         return render(request, self.template, context)
 
     def post(self, request):
@@ -68,12 +72,15 @@ class ObjectCreateMixin:
                 complete_form.save()
                 # Run Celery task
                 task_device_check_after_update.delay((complete_form.name), )
+                del user
+                del complete_form
             else:
                 bound_form.save()
             context.update({'form': self.form_model(), 'success': True})
         else:
             context.update({'form': bound_form, 'success': False})
 
+        del bound_form
         return render(request, self.template, context=context)
 
 
@@ -90,6 +97,8 @@ class ObjectEditMixin:
             'form': bound_form,
             'obj': obj
         }
+        del obj
+        del bound_form
         return render(request, self.template, context=context)
 
     def post(self, request, slug):
@@ -105,12 +114,16 @@ class ObjectEditMixin:
                 complete_form.save()
                 # Run Celery task
                 task_device_check_after_update.delay((complete_form.name), )
+                del user
+                del complete_form
             else:
                 bound_form.save()
             context.update({'form': bound_form, 'success': True})
         else:
             context.update({'form': bound_form, 'success': False})
 
+        del obj
+        del bound_form
         return render(request, self.template, context=context)
 
 
@@ -126,6 +139,7 @@ class ObjectDeleteMixin:
             'redirect_url': self.redirect_url,
             'obj': obj
         }
+        del obj
         return render(request, self.template, context=context)
 
     def post(self, request, slug):
@@ -141,6 +155,7 @@ class ObjectDeleteMixin:
                 obj.set_deleted()
         else:
             obj.delete()
+        del obj
         return redirect(reverse(self.redirect_url))
 
 
@@ -157,8 +172,12 @@ class SmsLogInView(View):
         user = authenticate(request, username=name, password=password)
         if user is not None:
             login(request, user)
+            del name
+            del password
             return redirect(reverse('url_devices_overview'))
 
+        del name
+        del password
         return render(request, 'sms_core/sms_log_in.html',
                       {'message': 'Wrong username or password!'})
 
@@ -239,4 +258,6 @@ class SmsUserEditView(LoginRequiredMixin, ObjectEditMixin, View):
         else:
             context.update({'form': bound_form, 'success': False})
 
+        del obj
+        del bound_form
         return render(request, self.template, context=context)

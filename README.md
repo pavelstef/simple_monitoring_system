@@ -66,6 +66,12 @@ Create database and user for django application:
         mysql> FLUSH PRIVILEGES;
 ```
 
+If you are going to run test cases, you need to grant privileges to the django user to access the test database:
+```
+        mysql> GRANT ALL PRIVILEGES ON test_sms.* TO 'django'@'%';
+        mysql> FLUSH PRIVILEGES;
+```
+
 You have 2 ways:
 1) Initialize the database from the django shell and create your first user yourself.
 2) Use my database dump with two default users (admin\admin, user\user).
@@ -153,7 +159,7 @@ Make sure that Supervisor is running:
           Active: active (running) since Wed 2020-04-15 19:55:03 MSK; 1min 20s ago
 ```
 
-# It should works!
+# It should work!
 You should have an access to:
 + app - http://<your_server_ip>:80/
 + flower - http://<your_server_ip>:5555/
