@@ -20,6 +20,8 @@ def task_initial_device_check(**kwargs) -> None:
         for device in devices:
             devices_for_checking.append(device.name)
         check_device_status(devices_for_checking)
+    del devices_for_checking
+    del devices
 
 
 @celery_app.task(time_limit=20, default_retry_delay=5, max_retries=2)
@@ -27,6 +29,7 @@ def task_device_check_after_update(device_name: str) -> None:
     """ Checking the device after update properties """
     new_device = Device.objects.filter(name__iexact=device_name)[0]
     check_device_status([new_device.name], workers_limit=1)
+    del new_device
 
 
 @celery_app.task(time_limit=200, max_retries=1)
@@ -68,3 +71,7 @@ def task_device_check_loop(global_device_dict=DEVICES, loop_time=5) -> None:
             for device in devices_for_checking:
                 global_device_dict.pop(device)
             check_device_status(devices_for_checking)
+
+    del devices_for_checking
+    del devices_for_removing
+    del devices_query_set
