@@ -5,7 +5,7 @@ from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from django.utils import timezone
+from django.utils import timezone, dateformat
 
 
 from .managers import SmsUserManager
@@ -29,23 +29,23 @@ class SmsUser(AbstractUser):
 
     objects = SmsUserManager()
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """ Get absolute URL to edit model's instance """
         return reverse('url_user_edit', kwargs={'slug': self.name})
 
-    def get_delete_url(self):
+    def get_delete_url(self) -> str:
         """ Get absolute URL to delete model's instance """
         return reverse('url_user_dell', kwargs={'slug': self.name})
 
-    def set_deleted(self):
+    def set_deleted(self) -> None:
         """
         Set models' instance as deleted and,
         change username to avoid problem with creating new instance with the same name
         """
-        self.name += f'_deleted_at_{timezone.now()}'
+        self.name += f'_deleted_at_{dateformat.format(timezone.now(), "Y-m-d_H:i")}'
         self.is_active = False
         self.save()
 
@@ -69,22 +69,22 @@ class Device(models.Model):
         on_delete=models.PROTECT
     )
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """ Get absolute URL to show model's instance details """
         return reverse('url_device_detail', kwargs={'slug': self.name})
 
-    def get_edit_url(self):
+    def get_edit_url(self) -> str:
         """ Get absolute URL to edit model's instance """
         return reverse('url_device_edit', kwargs={'slug': self.name})
 
-    def get_delete_url(self):
+    def get_delete_url(self) -> str:
         """ Get absolute URL to delete model's instance """
         return reverse('url_device_dell', kwargs={'slug': self.name})
 
-    def set_status(self, status: bool):
+    def set_status(self, status: bool) -> None:
         """
         Setting model's instance status:
         True - UP, reachable

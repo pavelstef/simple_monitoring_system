@@ -37,6 +37,8 @@ Pull the project from the github and prepare a virtual environment.
 Make sure that you set parameters such as SECRET_KEY and DB_PASSWORD in the environment variables,
 or edit the file **project_folder/sms/.env**
 
+Use https://djecrety.ir/ to generate your own SECRET_KEY
+
 Edit the scripts in the folder **<project_folder>/sms/bin/** according to your settings
 
 Edit the gunicorn configuration file - **<project_folder>/sms/gunicorn_config.py**
@@ -63,6 +65,12 @@ Create database and user for django application:
         mysql> CREATE DATABASE `sms` DEFAULT CHARACTER SET utf8;
         mysql> CREATE USER 'django'@'%' IDENTIFIED BY <put_your_password_here>;
         mysql> GRANT ALL PRIVILEGES ON sms.* TO 'django'@'%';
+        mysql> FLUSH PRIVILEGES;
+```
+
+If you are going to run test cases, you need to grant privileges to the django user to access the test database:
+```
+        mysql> GRANT ALL PRIVILEGES ON test_sms.* TO 'django'@'%';
         mysql> FLUSH PRIVILEGES;
 ```
 
@@ -153,7 +161,7 @@ Make sure that Supervisor is running:
           Active: active (running) since Wed 2020-04-15 19:55:03 MSK; 1min 20s ago
 ```
 
-# It should works!
+# It should work!
 You should have an access to:
 + app - http://<your_server_ip>:80/
 + flower - http://<your_server_ip>:5555/

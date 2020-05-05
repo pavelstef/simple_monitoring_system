@@ -9,8 +9,13 @@ from .models import SmsUser, Device
 
 class UserCreationForm(forms.ModelForm):
     """ A Form that validates data for creating User object """
+
+    passwords_help_text = 'The password must be 3-20 characters long, contain letters and numbers, ' \
+                          'and must not contain spaces, special characters, or emoji.'
+
     password1 = forms.CharField(
-        label='Password',
+        label='Password:',
+        help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
                 'class': "form-control",
@@ -19,7 +24,8 @@ class UserCreationForm(forms.ModelForm):
                 'minlength': "3",
                 'maxlength': "20"}))
     password2 = forms.CharField(
-        label='Password',
+        label='Confirm password:',
+        help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
                 'class': "form-control",
@@ -31,6 +37,20 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = SmsUser
         fields = ['name', 'is_staff']
+        labels = {
+            'name': 'Username:',
+            'is_staff': "Grant user administrator's permission?"
+        }
+        help_texts = {
+            'name': 'The username must be 3-20 characters long, contain letters and numbers,'
+                    ' and must not contain spaces, special characters, or emoji.'
+        }
+        error_messages = {
+            'name': {
+                'invalid': 'Enter a valid “Username” consisting of letters, numbers,'
+                           ' underscores or hyphens.'
+            }
+        }
 
         widgets = {
             'name': forms.TextInput(
@@ -44,7 +64,7 @@ class UserCreationForm(forms.ModelForm):
                 attrs={'class': "form-check-input"}),
         }
 
-    def clean_name(self):
+    def clean_name(self) -> str:
         new_name = self.cleaned_data.get('name')
 
         if new_name.lower() in ['create', 'add', 'edit']:
@@ -56,7 +76,7 @@ class UserCreationForm(forms.ModelForm):
 
         return new_name
 
-    def clean_password2(self):
+    def clean_password2(self) -> str:
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -64,7 +84,7 @@ class UserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
         return password2
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> object:
         # Save the provided password in hashed format
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
@@ -75,8 +95,13 @@ class UserCreationForm(forms.ModelForm):
 
 class UserChangeForm(forms.ModelForm):
     """ A Form that validates data for changing User data """
+
+    passwords_help_text = 'The password must be 3-20 characters long, contain letters and numbers, ' \
+                          'and must not contain spaces, special characters, or emoji.'
+
     password1 = forms.CharField(
-        label='Password',
+        label='New password:',
+        help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
                 'class': "form-control",
@@ -85,7 +110,8 @@ class UserChangeForm(forms.ModelForm):
                 'minlength': "3",
                 'maxlength': "20"}))
     password2 = forms.CharField(
-        label='Password',
+        label='Confirm password:',
+        help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
                 'class': "form-control",
@@ -108,7 +134,7 @@ class UserChangeForm(forms.ModelForm):
                     'maxlength': "20",
                     'readonly': True})}
 
-    def clean_password2(self):
+    def clean_password2(self) -> str:
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -116,15 +142,14 @@ class UserChangeForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
         return password2
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> object:
         # Save the provided password in hashed format
         name = self.cleaned_data.get('name')
-        if name:
-            user = SmsUser.objects.get(name__iexact=name)
-            user.set_password(self.cleaned_data.get('password1'))
-            if commit:
-                user.save()
-            return user
+        user = SmsUser.objects.get(name__iexact=name)
+        user.set_password(self.cleaned_data.get('password1'))
+        if commit:
+            user.save()
+        return user
 
 
 class DeviceForm(forms.ModelForm):
@@ -134,6 +159,26 @@ class DeviceForm(forms.ModelForm):
     class Meta:
         model = Device
         fields = ['name', 'ip_fqdn', 'description', 'check_interval']
+        labels = {
+            'name': 'Device name:',
+            'ip_fqdn': 'Device IP / FQDN:',
+            'description': 'Description:',
+            'check_interval': 'Check interval (minutes):'
+        }
+        help_texts = {
+            'name': 'The device name must be 5-20 ASCII characters long, contain letters and numbers,'
+                    ' and must not contain spaces, special characters, or emoji.',
+            'ip_fqdn': 'The IP / FQDN must be 5-20 ASCII characters long, contain letters and numbers,'
+                       ' and must not contain spaces, special characters, or emoji.',
+            'description': 'This field able to contains a description  up to 250 characters'
+        }
+        error_messages = {
+            'name': {
+                'invalid': 'Enter a valid “Device name” consisting of letters, numbers,'
+                           ' underscores or hyphens.'
+            }
+        }
+
 
         widgets = {
             'name': forms.TextInput(
@@ -163,23 +208,23 @@ class DeviceForm(forms.ModelForm):
                     'step': "5"}),
         }
 
-    def clean_name(self):
+    def clean_name(self) -> str:
         new_name = self.cleaned_data.get('name')
         if new_name.lower() in ['create', 'add', 'edit']:
             raise ValidationError('Please, use other name')
         return new_name
 
-    def clean_check_interval(self):
+    def clean_check_interval(self) -> int:
         new_check_interval = self.cleaned_data.get('check_interval')
         if new_check_interval < 5 or (new_check_interval % 5) != 0:
             raise ValidationError(
                 'Check interval should be multiple of 5 minutes')
         return new_check_interval
 
-    def clean_updated_at(self):
+    def clean_updated_at(self) -> str:
         return timezone.now()
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> object:
         # Set an updated_at field on update
         device = super().save(commit=False)
         device.updated_at = timezone.now()
