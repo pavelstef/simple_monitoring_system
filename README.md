@@ -161,7 +161,7 @@ Make sure that Supervisor is running:
           Active: active (running) since Wed 2020-04-15 19:55:03 MSK; 1min 20s ago
 ```
 
-# It should work!
+# It should works!
 You should have an access to:
 + app - http://<your_server_ip>:80/
 + flower - http://<your_server_ip>:5555/

@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+.venv/
+
+# IDE
+.idea
+
+# Gedit
+*~
+_env
+
+# Celery
+*.bak
+*.dat
+*.dir
+
+# Coverage
+.coverage

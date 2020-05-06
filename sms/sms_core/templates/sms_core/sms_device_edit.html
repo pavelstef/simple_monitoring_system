@@ -23,37 +23,7 @@
 
                 {% csrf_token %}
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>{{ form.name.label }}</label>
-                        {{ form.name }}
-                        <b>{{ form.name.errors }}</b>
-                        <small class="form-text text-muted">
-                            {{ form.name.help_text }}
-                        </small>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>{{ form.ip_fqdn.label }}</label>
-                        {{ form.ip_fqdn }}
-                        <b>{{ form.ip_fqdn.errors }}</b>
-                        <small class="form-text text-muted">
-                            {{ form.ip_fqdn.help_text }}
-                        </small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>{{ form.description.label }}</label>
-                    {{ form.description }}
-                    <b>{{ form.description.errors }}</b>
-                    <small class="form-text text-muted">
-                        {{ form.description.help_text }}
-                    </small>
-                </div>
-                <div class="form-group col-4" style="padding-left: 0px;">
-                    <label>{{ form.check_interval.label }}</label>
-                    {{ form.check_interval }}
-                    <b>{{ form.check_interval.errors }}</b>
-                </div>
+                {% include "sms_core/sms_device_form_base.html" %}
 
                 <div class="col-4 offset-md-8">
                     <a type="button" class="btn btn-danger" href="{{ obj.get_delete_url }}">Delete device</a>
