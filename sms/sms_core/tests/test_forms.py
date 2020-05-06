@@ -16,7 +16,7 @@ class UserCreationFormTests(TestCase):
         SmsUser.objects.create_user(name='test_user', password='test_password')
 
     def test_form_name_label(self) -> None:
-        self.assertEqual(self.form().fields['name'].label, 'Username:')
+        self.assertEqual(self.form().fields['name'].label, 'Username')
 
     def test_form_name_invalid(self) -> None:
         # 'create', 'add', 'edit' - these names are not valid
@@ -45,12 +45,12 @@ class UserCreationFormTests(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_form_password1_label(self) -> None:
-        self.assertEqual(self.form().fields['password1'].label, 'Password:')
+        self.assertEqual(self.form().fields['password1'].label, 'Password')
 
     def test_form_password2_label(self) -> None:
         self.assertEqual(
             self.form().fields['password2'].label,
-            'Confirm password:')
+            'Confirm password')
 
     def test_form_password_match(self) -> None:
         form_data = {'name': 'some_name', 'password1': 'test_password',
@@ -72,12 +72,12 @@ class UserChangeFormTests(TestCase):
     def test_form_password1_label(self) -> None:
         self.assertEqual(
             self.form().fields['password1'].label,
-            'New password:')
+            'New password')
 
     def test_form_password2_label(self) -> None:
         self.assertEqual(
             self.form().fields['password2'].label,
-            'Confirm password:')
+            'Confirm new password')
 
     def test_form_password_match(self) -> None:
         form_data = {'name': 'some_name', 'password1': 'test_password',
@@ -110,7 +110,7 @@ class DeviceFormTests(TestCase):
         )
 
     def test_form_name_label(self) -> None:
-        self.assertEqual(self.form().fields['name'].label, 'Device name:')
+        self.assertEqual(self.form().fields['name'].label, 'Device name')
 
     def test_form_name_invalid(self) -> None:
         # 'create', 'add', 'edit' - these names are not valid
@@ -141,19 +141,19 @@ class DeviceFormTests(TestCase):
     def test_form_ip_fqdn_label(self) -> None:
         self.assertEqual(
             self.form().fields['ip_fqdn'].label,
-            'Device IP / FQDN:'
+            'Device IP / FQDN'
         )
 
     def test_form_description_label(self) -> None:
         self.assertEqual(
             self.form().fields['description'].label,
-            'Description:'
+            'Description'
         )
 
     def test_form_check_interval_label(self) -> None:
         self.assertEqual(
             self.form().fields['check_interval'].label,
-            'Check interval (minutes):'
+            'Check interval (minutes)'
         )
 
     def test_form_check_interval_invalid(self) -> None:
