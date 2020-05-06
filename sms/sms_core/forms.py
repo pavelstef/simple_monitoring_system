@@ -40,10 +40,6 @@ class UserCreationForm(forms.ModelForm):
         labels = {
             'is_staff': "Grant user administrator's permission?"
         }
-        help_texts = {
-            'name': 'The username must be 3-20 characters long, contain letters and numbers,'
-                    ' and must not contain spaces, special characters, or emoji.'
-        }
         error_messages = {
             'name': {
                 'invalid': 'Enter a valid “Username” consisting of letters, numbers,'
@@ -156,13 +152,6 @@ class DeviceForm(forms.ModelForm):
     class Meta:
         model = Device
         fields = ['name', 'ip_fqdn', 'description', 'check_interval']
-        help_texts = {
-            'name': 'The device name must be 5-20 ASCII characters long, contain letters and numbers,'
-                    ' and must not contain spaces, special characters, or emoji.',
-            'ip_fqdn': 'The IP / FQDN must be 5-20 ASCII characters long, contain letters and numbers,'
-                       ' and must not contain spaces, special characters, or emoji.',
-            'description': 'This field able to contains a description  up to 250 characters'
-        }
         error_messages = {
             'name': {
                 'invalid': 'Enter a valid “Device name” consisting of letters, numbers,'
@@ -183,12 +172,12 @@ class DeviceForm(forms.ModelForm):
                     'class': "form-control",
                     'placeholder': "IP / FQDN",
                     'minlength': "5",
-                    'maxlength': "20"}),
+                    'maxlength': "30"}),
             'description': forms.TextInput(
                 attrs={
                     'class': "form-control",
                     'placeholder': "Description",
-                    'maxlength': "250"}),
+                    'maxlength': "255"}),
             'check_interval': forms.NumberInput(
                 attrs={
                     'class': "form-control",
