@@ -21,7 +21,7 @@ class SmsUser(AbstractUser):
     user_permissions = None
 
     # We will use if as slug.
-    name = models.SlugField(max_length=50, unique=True)
+    name = models.SlugField(max_length=50, unique=True, verbose_name='Username')
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'name'
@@ -54,13 +54,13 @@ class Device(models.Model):
     """ The model that describe of devices of the monitoring System """
 
     # We will use name as a slug.
-    name = models.SlugField(max_length=20, unique=True)
+    name = models.SlugField(max_length=20, unique=True, verbose_name='Device name')
 
-    ip_fqdn = models.CharField(max_length=30, unique=True)
+    ip_fqdn = models.CharField(max_length=30, unique=True, verbose_name='Device IP / FQDN')
     description = models.CharField(max_length=255, blank=True)
     status = models.BooleanField(default=False)
     last_status_changed = models.DateTimeField(auto_now_add=True)
-    check_interval = models.PositiveIntegerField(default=60)
+    check_interval = models.PositiveIntegerField(default=60, verbose_name='Check interval (minutes)')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     # Audit trail

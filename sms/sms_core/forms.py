@@ -14,7 +14,7 @@ class UserCreationForm(forms.ModelForm):
                           'and must not contain spaces, special characters, or emoji.'
 
     password1 = forms.CharField(
-        label='Password:',
+        label='Password',
         help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
@@ -24,7 +24,7 @@ class UserCreationForm(forms.ModelForm):
                 'minlength': "3",
                 'maxlength': "20"}))
     password2 = forms.CharField(
-        label='Confirm password:',
+        label='Confirm password',
         help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
@@ -38,7 +38,6 @@ class UserCreationForm(forms.ModelForm):
         model = SmsUser
         fields = ['name', 'is_staff']
         labels = {
-            'name': 'Username:',
             'is_staff': "Grant user administrator's permission?"
         }
         help_texts = {
@@ -57,7 +56,6 @@ class UserCreationForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Username",
-                    'required': True,
                     'minlength': "3",
                     'maxlength': "20"}),
             'is_staff': forms.CheckboxInput(
@@ -100,7 +98,7 @@ class UserChangeForm(forms.ModelForm):
                           'and must not contain spaces, special characters, or emoji.'
 
     password1 = forms.CharField(
-        label='New password:',
+        label='New password',
         help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
@@ -110,7 +108,7 @@ class UserChangeForm(forms.ModelForm):
                 'minlength': "3",
                 'maxlength': "20"}))
     password2 = forms.CharField(
-        label='Confirm password:',
+        label='Confirm new password',
         help_text=passwords_help_text,
         widget=forms.PasswordInput(
             attrs={
@@ -129,7 +127,6 @@ class UserChangeForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Username",
-                    'required': True,
                     'minlength': "3",
                     'maxlength': "20",
                     'readonly': True})}
@@ -159,12 +156,6 @@ class DeviceForm(forms.ModelForm):
     class Meta:
         model = Device
         fields = ['name', 'ip_fqdn', 'description', 'check_interval']
-        labels = {
-            'name': 'Device name:',
-            'ip_fqdn': 'Device IP / FQDN:',
-            'description': 'Description:',
-            'check_interval': 'Check interval (minutes):'
-        }
         help_texts = {
             'name': 'The device name must be 5-20 ASCII characters long, contain letters and numbers,'
                     ' and must not contain spaces, special characters, or emoji.',
@@ -185,14 +176,12 @@ class DeviceForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Device name",
-                    'required': True,
                     'minlength': "5",
                     'maxlength': "20"}),
             'ip_fqdn': forms.TextInput(
                 attrs={
                     'class': "form-control",
                     'placeholder': "IP / FQDN",
-                    'required': True,
                     'minlength': "5",
                     'maxlength': "20"}),
             'description': forms.TextInput(
