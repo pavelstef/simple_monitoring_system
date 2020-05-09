@@ -27,7 +27,7 @@
                 <p class="card-text">Device on monitoring since: {{ device.created_at|date:"d M Y H:i" }}</p>
                 <p class="card-text">The last time the device was edited by <b>{{ device.updated_by }}</b> at <b>{{ device.updated_at|date:"d M Y H:i" }}</b></p>
 
-                <a type="button" class="btn btn-secondary" href="{% url 'url_devices_overview' %}">Cancel</a>
+                <a type="button" class="btn btn-secondary" href="{% url 'sms_core:url_devices_overview' %}">Cancel</a>
             </div>
         </div>
 

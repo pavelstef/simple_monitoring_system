@@ -18,14 +18,14 @@
                 </div>
             {% endif %}
 
-            <form action="{% url 'url_device_add' %}" method="post">
+            <form action="{% url 'sms_core:url_device_add' %}" method="post">
 
                 {% csrf_token %}
 
                 {% include "sms_core/sms_device_form_base.html" %}
 
                 <div class="col-4 offset-md-8">
-                    <a type="button" class="btn btn-secondary" href="{% url 'url_devices_overview' %}">Cancel</a>
+                    <a type="button" class="btn btn-secondary" href="{% url 'sms_core:url_devices_overview' %}">Cancel</a>
                     <button type="submit" class="btn btn-success">Add device</button>
                 </div>
             </form>

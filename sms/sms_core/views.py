@@ -55,13 +55,10 @@ class ObjectCreateMixin:
     template = None
 
     def get(self, request):
-        form = self.form_model()
-        context = {'form': form}
-        del form
+        context = {'form': self.form_model()}
         return render(request, self.template, context)
 
     def post(self, request):
-        context = {}
         bound_form = self.form_model(request.POST)
 
         if bound_form.is_valid():
@@ -76,9 +73,9 @@ class ObjectCreateMixin:
                 del complete_form
             else:
                 bound_form.save()
-            context.update({'form': self.form_model(), 'success': True})
+            context = {'form': self.form_model(), 'success': True}
         else:
-            context.update({'form': bound_form, 'success': False})
+            context = {'form': bound_form, 'success': False}
 
         del bound_form
         return render(request, self.template, context=context)
@@ -174,7 +171,7 @@ class SmsLogInView(View):
             login(request, user)
             del name
             del password
-            return redirect(reverse('url_devices_overview'))
+            return redirect(reverse('sms_core:url_devices_overview'))
 
         del name
         del password
@@ -187,7 +184,7 @@ class SmsLogOutView(View):
 
     def get(self, request):
         logout(request)
-        return redirect(reverse('url_login'))
+        return redirect(reverse('sms_core:url_login'))
 
 
 class SmsOverviewView(LoginRequiredMixin, ObjectListMixin, View):
@@ -231,14 +228,14 @@ class SmsDeviceDeleteView(LoginRequiredMixin, ObjectDeleteMixin, View):
     """ View to delete a device """
     model = Device
     template = 'sms_core/sms_confirmation.html'
-    redirect_url = 'url_devices_overview'
+    redirect_url = 'sms_core:url_devices_overview'
 
 
 class SmsUserDeleteView(LoginRequiredMixin, ObjectDeleteMixin, View):
     """ View to delete a user """
     model = SmsUser
     template = 'sms_core/sms_confirmation.html'
-    redirect_url = 'url_administration'
+    redirect_url = 'sms_core:url_administration'
 
 
 class SmsUserEditView(LoginRequiredMixin, ObjectEditMixin, View):

@@ -20,12 +20,17 @@ class SmsUser(AbstractUser):
     groups = None
     user_permissions = None
 
+    class Meta:
+        get_latest_by = '-updated_at'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
     # We will use if as slug.
     name = models.SlugField(
         max_length=50,
         unique=True,
         verbose_name='Username',
-        help_text='The username must be 3-20 characters long, contain letters and numbers,'
+        help_text='The username must be 4-20 characters long, contain letters and numbers,'
                   ' and must not contain spaces, special characters, or emoji.'
     )
     updated_at = models.DateTimeField(auto_now=True)
@@ -40,11 +45,11 @@ class SmsUser(AbstractUser):
 
     def get_absolute_url(self) -> str:
         """ Get absolute URL to edit model's instance """
-        return reverse('url_user_edit', kwargs={'slug': self.name})
+        return reverse('sms_core:url_user_edit', kwargs={'slug': self.name})
 
     def get_delete_url(self) -> str:
         """ Get absolute URL to delete model's instance """
-        return reverse('url_user_dell', kwargs={'slug': self.name})
+        return reverse('sms_core:url_user_dell', kwargs={'slug': self.name})
 
     def set_deleted(self) -> None:
         """
@@ -58,6 +63,11 @@ class SmsUser(AbstractUser):
 
 class Device(models.Model):
     """ The model that describe of devices of the monitoring System """
+
+    class Meta:
+        get_latest_by = '-last_status_changed'
+        verbose_name = 'Device'
+        verbose_name_plural = 'Devices'
 
     # We will use name as a slug.
     name = models.SlugField(
@@ -81,7 +91,16 @@ class Device(models.Model):
     )
     status = models.BooleanField(default=False)
     last_status_changed = models.DateTimeField(auto_now_add=True)
-    check_interval = models.PositiveIntegerField(default=60, verbose_name='Check interval (minutes)')
+
+    CHECK_INTERVALS = (
+        (5, '5 minutes'), (10, '10 minutes'), (15, '15 minutes'),
+        (30, '30 minutes'), (60, '60 minutes')
+    )
+    check_interval = models.PositiveIntegerField(
+        choices=CHECK_INTERVALS,
+        default=60,
+        verbose_name='Check interval'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     # Audit trail
@@ -95,15 +114,15 @@ class Device(models.Model):
 
     def get_absolute_url(self) -> str:
         """ Get absolute URL to show model's instance details """
-        return reverse('url_device_detail', kwargs={'slug': self.name})
+        return reverse('sms_core:url_device_detail', kwargs={'slug': self.name})
 
     def get_edit_url(self) -> str:
         """ Get absolute URL to edit model's instance """
-        return reverse('url_device_edit', kwargs={'slug': self.name})
+        return reverse('sms_core:url_device_edit', kwargs={'slug': self.name})
 
     def get_delete_url(self) -> str:
         """ Get absolute URL to delete model's instance """
-        return reverse('url_device_dell', kwargs={'slug': self.name})
+        return reverse('sms_core:url_device_dell', kwargs={'slug': self.name})
 
     def set_status(self, status: bool) -> None:
         """

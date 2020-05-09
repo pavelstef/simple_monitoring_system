@@ -10,7 +10,7 @@ from .models import SmsUser, Device
 class UserCreationForm(forms.ModelForm):
     """ A Form that validates data for creating User object """
 
-    passwords_help_text = 'The password must be 3-20 characters long, contain letters and numbers, ' \
+    passwords_help_text = 'The password must be 8-20 characters long, contain letters and numbers, ' \
                           'and must not contain spaces, special characters, or emoji.'
 
     password1 = forms.CharField(
@@ -21,7 +21,7 @@ class UserCreationForm(forms.ModelForm):
                 'class': "form-control",
                 'placeholder': "Password",
                 'required': True,
-                'minlength': "3",
+                'minlength': "8",
                 'maxlength': "20"}))
     password2 = forms.CharField(
         label='Confirm password',
@@ -31,7 +31,7 @@ class UserCreationForm(forms.ModelForm):
                 'class': "form-control",
                 'placeholder': "Password",
                 'required': True,
-                'minlength': "3",
+                'minlength': "8",
                 'maxlength': "20"}))
 
     class Meta:
@@ -52,7 +52,7 @@ class UserCreationForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Username",
-                    'minlength': "3",
+                    'minlength': "4",
                     'maxlength': "20"}),
             'is_staff': forms.CheckboxInput(
                 attrs={'class': "form-check-input"}),
@@ -87,32 +87,8 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
-class UserChangeForm(forms.ModelForm):
+class UserChangeForm(UserCreationForm):
     """ A Form that validates data for changing User data """
-
-    passwords_help_text = 'The password must be 3-20 characters long, contain letters and numbers, ' \
-                          'and must not contain spaces, special characters, or emoji.'
-
-    password1 = forms.CharField(
-        label='New password',
-        help_text=passwords_help_text,
-        widget=forms.PasswordInput(
-            attrs={
-                'class': "form-control",
-                'placeholder': "Password",
-                'required': True,
-                'minlength': "3",
-                'maxlength': "20"}))
-    password2 = forms.CharField(
-        label='Confirm new password',
-        help_text=passwords_help_text,
-        widget=forms.PasswordInput(
-            attrs={
-                'class': "form-control",
-                'placeholder': "Password",
-                'required': True,
-                'minlength': "3",
-                'maxlength': "20"}))
 
     class Meta:
         model = SmsUser
@@ -123,17 +99,13 @@ class UserChangeForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Username",
-                    'minlength': "3",
+                    'minlength': "4",
                     'maxlength': "20",
                     'readonly': True})}
 
-    def clean_password2(self) -> str:
-        # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-        return password2
+    def clean_name(self) -> str:
+        name = self.cleaned_data.get('name')
+        return name
 
     def save(self, commit=True) -> object:
         # Save the provided password in hashed format
@@ -158,8 +130,6 @@ class DeviceForm(forms.ModelForm):
                            ' underscores or hyphens.'
             }
         }
-
-
         widgets = {
             'name': forms.TextInput(
                 attrs={
@@ -177,13 +147,7 @@ class DeviceForm(forms.ModelForm):
                 attrs={
                     'class': "form-control",
                     'placeholder': "Description",
-                    'maxlength': "255"}),
-            'check_interval': forms.NumberInput(
-                attrs={
-                    'class': "form-control",
-                    'min': "5",
-                    'max': "60",
-                    'step': "5"}),
+                    'maxlength': "255"})
         }
 
     def clean_name(self) -> str:
@@ -191,13 +155,6 @@ class DeviceForm(forms.ModelForm):
         if new_name.lower() in ['create', 'add', 'edit']:
             raise ValidationError('Please, use other name')
         return new_name
-
-    def clean_check_interval(self) -> int:
-        new_check_interval = self.cleaned_data.get('check_interval')
-        if new_check_interval < 5 or (new_check_interval % 5) != 0:
-            raise ValidationError(
-                'Check interval should be multiple of 5 minutes')
-        return new_check_interval
 
     def clean_updated_at(self) -> str:
         return timezone.now()

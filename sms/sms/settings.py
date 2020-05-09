@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sms_core.apps.SmsCoreConfig'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'sms_core.apps.SmsCoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +115,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'sms_core.SmsUser'
+
+
+# Rest API Authentication methods
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

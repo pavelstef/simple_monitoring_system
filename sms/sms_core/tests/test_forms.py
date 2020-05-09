@@ -72,12 +72,12 @@ class UserChangeFormTests(TestCase):
     def test_form_password1_label(self) -> None:
         self.assertEqual(
             self.form().fields['password1'].label,
-            'New password')
+            'Password')
 
     def test_form_password2_label(self) -> None:
         self.assertEqual(
             self.form().fields['password2'].label,
-            'Confirm new password')
+            'Confirm password')
 
     def test_form_password_match(self) -> None:
         form_data = {'name': 'some_name', 'password1': 'test_password',
