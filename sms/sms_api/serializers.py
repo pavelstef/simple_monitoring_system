@@ -5,20 +5,12 @@ from rest_framework import serializers
 from sms_core.models import Device
 
 
-class DeviceCreateEditSerializer(serializers.ModelSerializer):
-    """ A serializer for create or edit devices """
+class DeviceSerializer(serializers.ModelSerializer):
+    """ A serializer for devices """
 
     updated_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Device
-        fields = ('name', 'ip_fqdn', 'description', 'check_interval', 'updated_by')
-
-
-class DeviceViewSerializer(serializers.ModelSerializer):
-    """ A serializer for show device details """
-
-    class Meta:
-        model = Device
-        fields = ('id', 'name', 'ip_fqdn', 'description', 'status', 'last_status_changed',
-                  'check_interval')
+        fields = ('__all__')
+        read_only_fields = ('status', 'last_status_changed')

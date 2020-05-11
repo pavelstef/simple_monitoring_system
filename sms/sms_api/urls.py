@@ -1,15 +1,9 @@
 """ sms_api URL Configuration """
 
+from rest_framework.routers import DefaultRouter
 
-from django.urls import path
+from .views import DeviceView
 
-from . import views
-
-app_name = 'sms_api'
-
-urlpatterns = [
-    path('devices/create/', views.DeviceCreateView.as_view(), name='url_device_create'),
-    path('devices/all/', views.DevicesListView.as_view(), name='url_device_list'),
-    path('devices/<int:pk>/', views.DeviceEditDeletelView.as_view(), name='url_device_edit'),
-    path('devices/detail/<int:pk>/', views.DeviceDetailView.as_view(), name='url_device_detail'),
-]
+router = DefaultRouter(trailing_slash=False)
+router.register(r'devices', DeviceView, basename='device')
+urlpatterns = router.urls
