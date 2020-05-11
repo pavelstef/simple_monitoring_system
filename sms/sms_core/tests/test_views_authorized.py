@@ -26,14 +26,14 @@ class SmsLogInViewTests(LoginLogoutViewTests):
 
     def test_admin_login(self) -> None:
         self.client.login(username='test_admin', password='test_admin')
-        response = self.client.get(reverse('url_login'))
+        response = self.client.get(reverse('sms_core:url_login'))
         self.assertEqual(str(response.context['user']), 'test_admin')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_log_in.html')
 
     def test_user_login(self) -> None:
         self.client.login(username='test_user', password='test_user')
-        response = self.client.get(reverse('url_login'))
+        response = self.client.get(reverse('sms_core:url_login'))
         self.assertEqual(str(response.context['user']), 'test_user')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_log_in.html')
@@ -43,21 +43,21 @@ class SmsLogOutViewTests(LoginLogoutViewTests):
     """ Tests for the Logout view """
 
     def test_admin_logout(self) -> None:
-        response = self.client.get(reverse('url_logout'))
+        response = self.client.get(reverse('sms_core:url_logout'))
         self.assertEqual(response.context, None)
         self.assertRedirects(
             response,
-            expected_url=reverse('url_login'),
+            expected_url=reverse('sms_core:url_login'),
             status_code=302,
             target_status_code=200
         )
 
     def test_user_logout(self) -> None:
-        response = self.client.get(reverse('url_logout'))
+        response = self.client.get(reverse('sms_core:url_logout'))
         self.assertEqual(response.context, None)
         self.assertRedirects(
             response,
-            expected_url=reverse('url_login'),
+            expected_url=reverse('sms_core:url_login'),
             status_code=302,
             target_status_code=200
         )
@@ -100,7 +100,7 @@ class SmsOverviewViewTests(OperationalViewTests):
 
     def test_overview_admin(self) -> None:
         self.client.login(username='test_admin1', password='test_admin1')
-        response = self.client.get(reverse('url_devices_overview'))
+        response = self.client.get(reverse('sms_core:url_devices_overview'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_overview.html')
 
@@ -118,7 +118,7 @@ class SmsOverviewViewTests(OperationalViewTests):
 
     def test_overview_user(self) -> None:
         self.client.login(username='test_user', password='test_user')
-        response = self.client.get(reverse('url_devices_overview'))
+        response = self.client.get(reverse('sms_core:url_devices_overview'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_overview.html')
 
@@ -137,7 +137,7 @@ class SmsOverviewViewTests(OperationalViewTests):
     def test_search(self) -> None:
         self.client.login(username='test_admin1', password='test_admin1')
         response = self.client.get(
-            f'{reverse("url_devices_overview")}?search=device2'
+            f'{reverse("sms_core:url_devices_overview")}?search=device2'
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_overview.html')
@@ -155,7 +155,7 @@ class SmsAdministrationViewTests(OperationalViewTests):
         self.client.login(username='test_admin1', password='test_admin1')
 
     def test_administration(self) -> None:
-        response = self.client.get(reverse('url_administration'))
+        response = self.client.get(reverse('sms_core:url_administration'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_administration.html')
 
@@ -172,7 +172,7 @@ class SmsAdministrationViewTests(OperationalViewTests):
 
     def test_search(self) -> None:
         response = self.client.get(
-            f'{reverse("url_administration")}?search=user'
+            f'{reverse("sms_core:url_administration")}?search=user'
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_administration.html')
@@ -192,7 +192,7 @@ class SmsDeviceDetailsViewTests(OperationalViewTests):
     def test_device_detail(self) -> None:
         device = Device.objects.get(name='device1')
         response = self.client.get(
-            reverse('url_device_detail', kwargs={'slug': device.name})
+            reverse('sms_core:url_device_detail', kwargs={'slug': device.name})
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_device_detail.html')
@@ -206,7 +206,7 @@ class SmsDeviceAddViewTests(OperationalViewTests):
         self.client.login(username='test_admin1', password='test_admin1')
 
     def test_device_add_get(self) -> None:
-        response = self.client.get(reverse('url_device_add'))
+        response = self.client.get(reverse('sms_core:url_device_add'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_device_add.html')
         self.assertIsInstance(response.context['form'], DeviceForm)
@@ -218,7 +218,7 @@ class SmsDeviceAddViewTests(OperationalViewTests):
             'description': 'Device 3 description',
             'check_interval': 10
         }
-        response = self.client.post(reverse('url_device_add'), data=data)
+        response = self.client.post(reverse('sms_core:url_device_add'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['success'])
         new_device = Device.objects.get(name=data['name'])
@@ -235,7 +235,7 @@ class SmsDeviceAddViewTests(OperationalViewTests):
             'description': 'Device 3 description',
             'check_interval': 10
         }
-        response = self.client.post(reverse('url_device_add'), data=data)
+        response = self.client.post(reverse('sms_core:url_device_add'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['success'])
         with self.assertRaises(Device.DoesNotExist):
@@ -251,7 +251,7 @@ class SmsDeviceEditViewTests(OperationalViewTests):
 
     def test_device_edit_get(self) -> None:
         response = self.client.get(
-            reverse('url_device_edit', kwargs={'slug': self.device.name})
+            reverse('sms_core:url_device_edit', kwargs={'slug': self.device.name})
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_device_edit.html')
@@ -266,7 +266,7 @@ class SmsDeviceEditViewTests(OperationalViewTests):
             'check_interval': 30
         }
         response = self.client.post(
-            reverse('url_device_edit', kwargs={'slug': self.device.name}),
+            reverse('sms_core:url_device_edit', kwargs={'slug': self.device.name}),
             data=data
         )
         self.assertEqual(response.status_code, 200)
@@ -286,7 +286,7 @@ class SmsDeviceEditViewTests(OperationalViewTests):
             'check_interval': 30
         }
         response = self.client.post(
-            reverse('url_device_edit', kwargs={'slug': self.device.name}),
+            reverse('sms_core:url_device_edit', kwargs={'slug': self.device.name}),
             data=data
         )
         self.assertEqual(response.status_code, 200)
@@ -304,23 +304,23 @@ class SmsDeviceDeleteViewTests(OperationalViewTests):
 
     def test_device_delete_get(self) -> None:
         response = self.client.get(
-            reverse('url_device_dell', kwargs={'slug': self.device.name})
+            reverse('sms_core:url_device_dell', kwargs={'slug': self.device.name})
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_confirmation.html')
         self.assertEqual(
             response.context['redirect_url'],
-            'url_devices_overview'
+            'sms_core:url_devices_overview'
         )
         self.assertEqual(response.context['obj'], self.device)
 
     def test_device_delete_post(self) -> None:
         response = self.client.post(
-            reverse('url_device_dell', kwargs={'slug': self.device.name})
+            reverse('sms_core:url_device_dell', kwargs={'slug': self.device.name})
         )
         self.assertRedirects(
             response=response,
-            expected_url=reverse('url_devices_overview'),
+            expected_url=reverse('sms_core:url_devices_overview'),
             status_code=302,
             target_status_code=200,
             fetch_redirect_response=True
@@ -336,7 +336,7 @@ class SmsUserCreateViewTests(OperationalViewTests):
         self.client.login(username='test_admin1', password='test_admin1')
 
     def test_user_create_get(self) -> None:
-        response = self.client.get(reverse('url_user_create'))
+        response = self.client.get(reverse('sms_core:url_user_create'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_user_create.html')
         self.assertIsInstance(response.context['form'], UserCreationForm)
@@ -348,7 +348,7 @@ class SmsUserCreateViewTests(OperationalViewTests):
             'password2': 'test_user3',
             'is_staff': False
         }
-        response = self.client.post(reverse('url_user_create'), data=data)
+        response = self.client.post(reverse('sms_core:url_user_create'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['success'])
         new_user = SmsUser.objects.get(name=data['name'])
@@ -362,7 +362,7 @@ class SmsUserCreateViewTests(OperationalViewTests):
             'password2': 'test_admin3',
             'is_staff': True
         }
-        response = self.client.post(reverse('url_user_create'), data=data)
+        response = self.client.post(reverse('sms_core:url_user_create'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['success'])
         new_user = SmsUser.objects.get(name=data['name'])
@@ -376,7 +376,7 @@ class SmsUserCreateViewTests(OperationalViewTests):
             'password2': 'test_admin3',
             'is_staff': True
         }
-        response = self.client.post(reverse('url_user_create'), data=data)
+        response = self.client.post(reverse('sms_core:url_user_create'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['success'])
         with self.assertRaises(SmsUser.DoesNotExist):
@@ -392,7 +392,7 @@ class SmsUserEditViewTests(OperationalViewTests):
 
     def test_user_edit_get(self) -> None:
         response = self.client.get(
-            reverse('url_user_edit', kwargs={'slug': self.user.name})
+            reverse('sms_core:url_user_edit', kwargs={'slug': self.user.name})
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_user_edit.html')
@@ -406,7 +406,7 @@ class SmsUserEditViewTests(OperationalViewTests):
             'password2': 'test_admin2_new'
         }
         response = self.client.post(
-            reverse('url_user_edit', kwargs={'slug': self.user.name}),
+            reverse('sms_core:url_user_edit', kwargs={'slug': self.user.name}),
             data=data
         )
         self.assertEqual(response.status_code, 200)
@@ -419,7 +419,7 @@ class SmsUserEditViewTests(OperationalViewTests):
             'password2': 'test_admin2_new1'  # invalid password2
         }
         response = self.client.post(
-            reverse('url_user_edit', kwargs={'slug': self.user.name}),
+            reverse('sms_core:url_user_edit', kwargs={'slug': self.user.name}),
             data=data
         )
         self.assertEqual(response.status_code, 200)
@@ -435,23 +435,23 @@ class SmsUserDeleteViewTests(OperationalViewTests):
 
     def test_user_delete_get(self) -> None:
         response = self.client.get(
-            reverse('url_user_dell', kwargs={'slug': self.user.name})
+            reverse('sms_core:url_user_dell', kwargs={'slug': self.user.name})
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_confirmation.html')
         self.assertEqual(
             response.context['redirect_url'],
-            'url_administration'
+            'sms_core:url_administration'
         )
         self.assertEqual(response.context['obj'], self.user)
 
     def test_user_delete_post(self) -> None:
         response = self.client.post(
-            reverse('url_user_dell', kwargs={'slug': self.user.name})
+            reverse('sms_core:url_user_dell', kwargs={'slug': self.user.name})
         )
         self.assertRedirects(
             response=response,
-            expected_url=reverse('url_administration'),
+            expected_url=reverse('sms_core:url_administration'),
             status_code=302,
             target_status_code=200,
             fetch_redirect_response=True
@@ -466,11 +466,11 @@ class SmsUserDeleteViewTests(OperationalViewTests):
         self.user.set_deleted()
 
         response = self.client.post(
-            reverse('url_user_dell', kwargs={'slug': 'test_admin1'})
+            reverse('sms_core:url_user_dell', kwargs={'slug': 'test_admin1'})
         )
         self.assertRedirects(
             response=response,
-            expected_url=reverse('url_administration'),
+            expected_url=reverse('sms_core:url_administration'),
             status_code=302,
             target_status_code=200,
             fetch_redirect_response=True

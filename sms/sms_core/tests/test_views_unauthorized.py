@@ -28,12 +28,12 @@ class URLCommonTests(SimpleTestCase):
         )
 
     def test_login_page(self) -> None:
-        response = self.client.get(reverse('url_login'))
+        response = self.client.get(reverse('sms_core:url_login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sms_core/sms_log_in.html')
 
     def test_logout_page_redirect(self) -> None:
-        response = self.client.get(reverse('url_logout'))
+        response = self.client.get(reverse('sms_core:url_logout'))
         self.assertRedirects(
             response=response,
             expected_url='/sms/login/',
@@ -50,7 +50,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
     """
 
     def test_devices_overview_page(self) -> None:
-        response = self.client.get(reverse('url_devices_overview'))
+        response = self.client.get(reverse('sms_core:url_devices_overview'))
         self.assertRedirects(
             response=response,
             expected_url='/accounts/login/?next=/sms/overview/',
@@ -60,7 +60,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
         )
 
     def test_administration_page(self) -> None:
-        response = self.client.get(reverse('url_administration'))
+        response = self.client.get(reverse('sms_core:url_administration'))
         self.assertRedirects(
             response=response,
             expected_url='/accounts/login/?next=/sms/administration/',
@@ -70,7 +70,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
         )
 
     def test_user_create_page(self) -> None:
-        response = self.client.get(reverse('url_user_create'))
+        response = self.client.get(reverse('sms_core:url_user_create'))
         self.assertRedirects(
             response=response,
             expected_url='/accounts/login/?next=/sms/user/create/',
@@ -81,7 +81,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
 
     def test_user_edit_page(self) -> None:
         response = self.client.get(
-            reverse('url_user_edit', kwargs={'slug': 'test'})
+            reverse('sms_core:url_user_edit', kwargs={'slug': 'test'})
         )
         self.assertRedirects(
             response=response,
@@ -93,7 +93,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
 
     def test_user_dell_page(self) -> None:
         response = self.client.get(
-            reverse('url_user_dell', kwargs={'slug': 'test'})
+            reverse('sms_core:url_user_dell', kwargs={'slug': 'test'})
         )
         self.assertRedirects(
             response=response,
@@ -104,7 +104,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
         )
 
     def test_device_add_page(self) -> None:
-        response = self.client.get(reverse('url_device_add'))
+        response = self.client.get(reverse('sms_core:url_device_add'))
         self.assertRedirects(
             response=response,
             expected_url='/accounts/login/?next=/sms/device/add/',
@@ -115,7 +115,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
 
     def test_device_edit_page(self) -> None:
         response = self.client.get(
-            reverse('url_device_edit', kwargs={'slug': 'test'})
+            reverse('sms_core:url_device_edit', kwargs={'slug': 'test'})
         )
         self.assertRedirects(
             response=response,
@@ -127,7 +127,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
 
     def test_device_detail_page(self) -> None:
         response = self.client.get(
-            reverse('url_device_detail', kwargs={'slug': 'test'})
+            reverse('sms_core:url_device_detail', kwargs={'slug': 'test'})
         )
         self.assertRedirects(
             response=response,
@@ -139,7 +139,7 @@ class ViewsUnauthorizedTests(SimpleTestCase):
 
     def test_device_dell_page(self) -> None:
         response = self.client.get(
-            reverse('url_device_dell', kwargs={'slug': 'test'})
+            reverse('sms_core:url_device_dell', kwargs={'slug': 'test'})
         )
         self.assertRedirects(
             response=response,

@@ -5,6 +5,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'sms_core'
+
 urlpatterns = [
     path('login/', views.SmsLogInView.as_view(), name='url_login'),
     path('logout/', views.SmsLogOutView.as_view(), name='url_logout'),
