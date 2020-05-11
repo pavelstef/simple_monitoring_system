@@ -17,8 +17,6 @@ class SmsUser(AbstractUser):
     username = None
     first_name = None
     last_name = None
-    groups = None
-    user_permissions = None
 
     class Meta:
         get_latest_by = '-updated_at'

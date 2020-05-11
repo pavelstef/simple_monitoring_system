@@ -14,3 +14,12 @@ class DeviceSerializer(serializers.ModelSerializer):
         model = Device
         fields = ('__all__')
         read_only_fields = ('status', 'last_status_changed')
+
+
+class DeviceUpdateSerializer(DeviceSerializer):
+    """ A serializer for update devices """
+
+    class Meta:
+        model = Device
+        fields = ('__all__')
+        read_only_fields = ('name', 'status', 'last_status_changed')

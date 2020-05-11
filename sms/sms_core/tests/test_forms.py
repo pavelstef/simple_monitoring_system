@@ -153,11 +153,11 @@ class DeviceFormTests(TestCase):
     def test_form_check_interval_label(self) -> None:
         self.assertEqual(
             self.form().fields['check_interval'].label,
-            'Check interval (minutes)'
+            'Check interval'
         )
 
     def test_form_check_interval_invalid(self) -> None:
-        # Less than 5 or not a multiple of 5
+        # The check_interval should be in [5, 10, 15, 30, 60]
         form_data = {'name': 'some_device', 'ip_fqdn': '3.3.3.3',
                      'check_interval': '1'}
         form = self.form(data=form_data)
@@ -169,7 +169,7 @@ class DeviceFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_form_check_interval_valid(self) -> None:
-        # More than 5 and multiple of 5
+        # he check_interval should be in [5, 10, 15, 30, 60]
         form_data = {'name': 'some_device', 'ip_fqdn': '3.3.3.3',
                      'check_interval': '10'}
         form = self.form(data=form_data)

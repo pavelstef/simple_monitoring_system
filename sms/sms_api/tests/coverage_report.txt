@@ -1,0 +1,26 @@
+coverage run --source=sms_api manage.py test sms_api
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 2.222s
+
+OK
+Destroying test database for alias 'default'...
+
+
+coverage report -m
+Name                                       Stmts   Miss  Cover   Missing
+------------------------------------------------------------------------
+sms_api/__init__.py                            0      0   100%
+sms_api/admin.py                               1      1     0%   1
+sms_api/apps.py                                4      4     0%   1-6
+sms_api/migrations/__init__.py                 0      0   100%
+sms_api/serializers.py                        13      0   100%
+sms_api/tests/__init__.py                      0      0   100%
+sms_api/tests/test_views_authorized.py        96      0   100%
+sms_api/tests/test_views_unauthorized.py      24      0   100%
+sms_api/urls.py                                5      0   100%
+sms_api/views.py                              38      0   100%
+------------------------------------------------------------------------
+TOTAL                                        181      5    97%

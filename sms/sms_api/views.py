@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from sms_core.models import Device
-from .serializers import DeviceSerializer
+from .serializers import DeviceSerializer, DeviceUpdateSerializer
 
 
 class DeviceView(viewsets.ViewSet):
@@ -52,8 +52,14 @@ class DeviceView(viewsets.ViewSet):
         """ Updating device properties. PATCH method """
         queryset = Device.objects.all()
         device = get_object_or_404(queryset, pk=pk)
-        serializer = DeviceSerializer(device)
-        return Response({'device': serializer.data})
+        serializer = DeviceUpdateSerializer(
+            device, data=request.data,
+            context={'request': request},
+            partial=True
+        )
+        if serializer.is_valid(raise_exception=True):
+            device_saved = serializer.save()
+        return Response({'success': f'Device with id "{pk}" updated successfully.'})
 
     def destroy(self, request, pk=None):
         """ Removing a device. DELETE method """

@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
@@ -23,6 +24,7 @@ from .views import redirect_sms_login, redirect_sms_overview
 
 urlpatterns = [
     path('', redirect_sms_overview),
+    path('admin/', admin.site.urls),
     path('accounts/login/', redirect_sms_login),
     path('sms/', include('sms_core.urls')),
     path('api/v1/auth-base/', include('rest_framework.urls')),
