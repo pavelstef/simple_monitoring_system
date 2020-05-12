@@ -146,6 +146,7 @@ Make sure that Supervisor is running:
 You should have an access to:
 + The core web application - http://<your_server_ip>:80/
 + Flower (Celery monitoring system) - http://<your_server_ip>:5555/
-+ REST API http://<your_server_ip>:80/api/v1/sms/
-+ REST API Documentation http://<your_server_ip>:80/api/v1/sms/docs/
++ REST API - http://<your_server_ip>:80/api/v1/sms/devices
++ REST API Token auth - http://<your_server_ip>:80/api/v1/auth-token/token/login/
++ REST API Documentation - http://<your_server_ip>:80/api/v1/sms/docs
 

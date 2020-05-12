@@ -20,7 +20,6 @@ class SmsUserManager(BaseUserManager):
         user = self.model(name=name, **extra_fields)
         user.set_password(password)
         user.save()
-
         return user
 
     def create_superuser(self, name, password, **extra_fields):
