@@ -13,7 +13,7 @@
             <div class="col-2 offset-md-10">
 
                 {% if request.user.is_staff %}
-                    <a type="button" class="btn btn-secondary" href="{% url 'url_device_add' %}">Add device</a>
+                    <a type="button" class="btn btn-secondary" href="{% url 'sms_core:url_device_add' %}">Add device</a>
                 {% endif %}
 
             </div>
@@ -32,7 +32,7 @@
                         {{ device.name }} -- In status UP since: {{ device.last_status_changed|date:"d M Y H:i" }}
                         <a href="{{ device.get_absolute_url }}" class="btn btn-secondary btn-sm">More...</a>
                         {% if request.user.is_staff %}
-                        <a href="{% url 'url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'sms_core:url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
                         {% endif %}
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         {{ device.name }} -- In status DOWN since: {{ device.last_status_changed|date:"d M Y H:i" }}
                         <a href="{{ device.get_absolute_url }}" class="btn btn-secondary btn-sm">More...</a>
                         {% if request.user.is_staff %}
-                        <a href="{% url 'url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'sms_core:url_device_edit' slug=device.name %}" class="btn btn-secondary btn-sm">Edit</a>
                         {% endif %}
                     </div>
                 </div>
@@ -60,7 +60,7 @@
 {% block scripts %}
     <script>
         window.setTimeout(function () {
-            location.href = "{% url 'url_devices_overview' %}";
+            location.href = "{% url 'sms_core:url_devices_overview' %}";
         }, 300000); // refresh after 300 seconds (5 minutes)
     </script>
 {% endblock %}

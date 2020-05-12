@@ -15,12 +15,11 @@ class SmsUserManager(BaseUserManager):
         Create and save a User with the given name and password.
         """
         if not name:
-            raise ValueError('The Neme must be set')
+            raise ValueError('The Name must be set')
 
         user = self.model(name=name, **extra_fields)
         user.set_password(password)
         user.save()
-
         return user
 
     def create_superuser(self, name, password, **extra_fields):

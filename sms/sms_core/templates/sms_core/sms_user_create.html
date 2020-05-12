@@ -17,7 +17,7 @@
                 </div>
             {% endif %}
 
-            <form action="{% url 'url_user_create' %}" method="post">
+            <form action="{% url 'sms_core:url_user_create' %}" method="post">
 
                 <div class="form-group">
 
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="col-4 offset-md-10">
-                    <a type="button" class="btn btn-secondary" href="{% url 'url_administration' %}">Cancel</a>
+                    <a type="button" class="btn btn-secondary" href="{% url 'sms_core:url_administration' %}">Cancel</a>
                     <button type="submit" class="btn btn-success">Create user</button>
                 </div>
 
