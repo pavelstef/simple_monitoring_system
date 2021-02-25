@@ -10,7 +10,6 @@ def device_ping(device: object, count='3') -> object:
     """ Synchronous ping of a device """
     result = subprocess.run(['ping', '-c', count, device.ip_fqdn], check=False)
     if result.returncode == 0:
-        del result
         return device
 
 

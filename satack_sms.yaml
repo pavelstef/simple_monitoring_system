@@ -6,9 +6,9 @@ enviroment:
   - DATABASE_NAME=sms
   - DATABASE_USER=sms_user
   - DATABASE_PASSWORD=sms_password
-  - DATABASE_HOST=127.0.0.1
+  - DATABASE_HOST=postgres_db
   - DATABASE_PORT=5432
-  - REDIS_HOST=127.0.0.1
+  - REDIS_HOST=redis
   - REDIS_PORT=6379
   - REDIS_DB_NUM=0
   - TZ=Europe/Moscow
@@ -54,8 +54,9 @@ services:
         - postgres_db
         - redis
       ports:
-        - 8001:8001
-      command: gunicorn sms.wsgi:application --bind 0.0.0.0:8001 --workers=3
+        - 8001:8001  # todo remove
+        - 5555:5555
+      entrypoint: ./run.sh
 
   nginx:
     image: nginx

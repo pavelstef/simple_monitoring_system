@@ -28,7 +28,7 @@ SECRET_KEY = environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = environ.get('DEBUG', default=False)
+DEBUG = environ.get('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,7 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

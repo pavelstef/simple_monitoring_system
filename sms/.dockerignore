@@ -1,0 +1,7 @@
+**/venv
+**/bin
+**/migrations
+*.log
+*.sql
+Jenkinsfile*
+*.yaml

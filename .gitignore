@@ -20,3 +20,9 @@ _env
 
 # Coverage
 .coverage
+
+# Celery
+celerybeat*
+
+# Logs
+*.log
