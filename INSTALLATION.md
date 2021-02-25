@@ -5,7 +5,7 @@ The application was developed and tested on computers Linux Mint 19.3 (python 3.
 + Installation of packages.
 ```
         sudo apt update
-        sudo apt install -y python3-pip python3-venv redis-server nginx supervisor mysql-server mysql-client libmysqlclient-dev
+        sudo apt install -y python3-pip python3-venv redis-server nginx supervisor postgresql postgresql-contrib
 ```
 
 + App.
@@ -30,35 +30,31 @@ Edit the scripts in the folder **<project_folder>/sms/bin/** according to your s
 
 Edit the gunicorn configuration file - **<project_folder>/sms/gunicorn_config.py**
 
-+ MySQL.
++ PostgreSQL.
 
-Run the script of secure installation:
+Make sure that PostgreSQL is running:
 ```
-        sudo mysql_secure_installation
-```
-
-Make sure that MySQL is running:
-```
-        pavel@gb-ubuntu-01:~$ sudo systemctl status mysql
-        ● mysql.service - MySQL Community Server
-          Loaded: loaded (/lib/systemd/system/mysql.service; enabled; vendor preset: enabled)
-          Active: active (running) since Wed 2020-04-15 21:11:46 MSK; 4h 17min ago
-
+        pavel@gb-ubuntu-01:~$ sudo systemctl status postgresql
+        ● postgresql.service - PostgreSQL RDBMS
+            Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+            Active: active ...
 ```
 
 Create database and user for django application:
 ```
-        mysql -u root -p
-        mysql> CREATE DATABASE `sms` DEFAULT CHARACTER SET utf8;
-        mysql> CREATE USER 'django'@'%' IDENTIFIED BY <put_your_password_here>;
-        mysql> GRANT ALL PRIVILEGES ON sms.* TO 'django'@'%';
-        mysql> FLUSH PRIVILEGES;
+        sudo -i -u postgres
+        psql
+        CREATE DATABASE sms;
+        CREATE USER sms_user WITH PASSWORD <put_your_password_here>;
+        ALTER ROLE sms_user SET client_encoding TO 'utf8';
+        ALTER ROLE sms_user SET default_transaction_isolation TO 'read committed';
+        ALTER ROLE sms_user SET timezone TO 'UTC+3';
+        GRANT ALL PRIVILEGES ON DATABASE sms TO sms_user;
 ```
 
 If you are going to run test cases, you need to grant privileges to the django user to access the test database:
 ```
-        mysql> GRANT ALL PRIVILEGES ON test_sms.* TO 'django'@'%';
-        mysql> FLUSH PRIVILEGES;
+        GRANT ALL PRIVILEGES ON DATABASE test_sms TO sms_user;
 ```
 
 
