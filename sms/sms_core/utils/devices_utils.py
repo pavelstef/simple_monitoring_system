@@ -8,7 +8,7 @@ from sms_core.models import Device
 
 def device_ping(device: object, count='3') -> object:
     """ Synchronous ping of a device """
-    result = subprocess.run(['ping', '-c', count, device.ip_fqdn], check=False)
+    result = subprocess.run(['ping', '-c', count, device.ip_fqdn])
     if result.returncode == 0:
         return device
 
@@ -36,6 +36,3 @@ def check_device_status(devices_list: list, workers_limit=5) -> None:
                 device.set_status(True)
             else:
                 device.set_status(False)
-
-    del devices_obj_list
-    del device_up_list

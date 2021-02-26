@@ -16,6 +16,7 @@ enviroment:
 volumes:
   postgres_volume:
   static_volume:
+  app_volume:
 
 services:
 
@@ -36,10 +37,13 @@ services:
       - ${REDIS_PORT}:6379  # todo remove
 
   sms_app:
-    image: sms_app
+    build:
+      ./sms
     depends_on:
       - postgres_db
       - redis
+    volumes:
+      - app_volume:/opt/sms_app/
     environment:
       - DEBUG=False
       - DB_NAME=${DATABASE_NAME}
@@ -57,6 +61,62 @@ services:
         - 8001:8001  # todo remove
         - 5555:5555
       entrypoint: ./run.sh
+
+  celery:
+    build:
+      ./sms
+    depends_on:
+      - postgres_db
+      - redis
+      - sms_app
+    volumes:
+      - app_volume:/opt/sms_app/
+    environment:
+      - DEBUG=False
+      - DB_NAME=${DATABASE_NAME}
+      - DB_USER=${DATABASE_USER}
+      - DB_PASSWORD=${DATABASE_PASSWORD}
+      - DB_HOST=${DATABASE_HOST}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB_NUM=${REDIS_DB_NUM}
+      - TIME_ZONE=${TZ}
+    links:
+      - postgres_db
+      - redis
+      - sms_app
+    command:
+      celery -A sms worker -l info --logfile=./logs/celery.log -B -n celery
+
+  flower:
+    build:
+      ./sms
+    depends_on:
+      - postgres_db
+      - redis
+      - sms_app
+      - celery
+    volumes:
+      - app_volume:/opt/sms_app/
+    environment:
+      - DEBUG=False
+      - DB_NAME=${DATABASE_NAME}
+      - DB_USER=${DATABASE_USER}
+      - DB_PASSWORD=${DATABASE_PASSWORD}
+      - DB_HOST=${DATABASE_HOST}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB_NUM=${REDIS_DB_NUM}
+      - TIME_ZONE=${TZ}
+    links:
+      - postgres_db
+      - redis
+      - sms_app
+      - celery
+    ports:
+      - 5555:5555
+    command:
+      flower -A sms --port=5555
 
   nginx:
     image: nginx
