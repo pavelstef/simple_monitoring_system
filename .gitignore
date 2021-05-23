@@ -5,6 +5,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 .venv/
+/venv/
 
 # IDE
 .idea
@@ -31,4 +32,5 @@ celerybeat*
 .env*
 
 # Static files
-static/
+/static/
+
