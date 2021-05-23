@@ -1,0 +1,122 @@
+version: "3"
+
+volumes:
+  postgres_volume:
+  static_volume:
+  logs_volume:
+
+services:
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=${SMS_DATABASE_USER}
+      - POSTGRES_PASSWORD=${SMS_DATABASE_PASSWORD}
+      - POSTGRES_DB=${SMS_DATABASE_NAME}
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  sms_app:
+    build: .
+    image: sms_app:latest
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - logs_volume:/opt/sms_app/logs
+      - static_volume:/opt/sms_app/static
+    environment:
+      - DEBUG=${SMS_DEBUG}
+      - SECRET_KEY=${SMS_SECRET_KEY}
+      - DB_NAME=${SMS_DATABASE_NAME}
+      - DB_USER=${SMS_DATABASE_USER}
+      - DB_PASSWORD=${SMS_DATABASE_PASSWORD}
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+      - REDIS_DB_NUM=${SMS_REDIS_DB_NUM}
+      - TIME_ZONE=${SMS_TZ}
+    links:
+      - postgres
+      - redis
+    expose:
+      - 8001
+    ports:
+      - 8001:8001
+    entrypoint: ./run.sh
+
+  celery:
+    build: .
+    image: sms_celery:latest
+    depends_on:
+      - postgres
+      - redis
+      - sms_app
+    volumes:
+      - logs_volume:/opt/sms_app/logs
+    environment:
+      - DEBUG=${SMS_DEBUG}
+      - SECRET_KEY=${SMS_SECRET_KEY}
+      - DB_NAME=${SMS_DATABASE_NAME}
+      - DB_USER=${SMS_DATABASE_USER}
+      - DB_PASSWORD=${SMS_DATABASE_PASSWORD}
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+      - REDIS_DB_NUM=${SMS_REDIS_DB_NUM}
+      - TIME_ZONE=${SMS_TZ}
+    links:
+      - postgres
+      - redis
+      - sms_app
+    command:
+      celery -A sms worker -l info --logfile=./logs/celery.log -B -n celery
+
+  flower:
+    build: .
+    image: sms_flower:latest
+    depends_on:
+      - postgres
+      - redis
+      - sms_app
+      - celery
+    volumes:
+      - logs_volume:/opt/sms_app/logs
+    environment:
+      - DEBUG=${SMS_DEBUG}
+      - SECRET_KEY=${SMS_SECRET_KEY}
+      - DB_NAME=${SMS_DATABASE_NAME}
+      - DB_USER=${SMS_DATABASE_USER}
+      - DB_PASSWORD=${SMS_DATABASE_PASSWORD}
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+      - REDIS_DB_NUM=${SMS_REDIS_DB_NUM}
+      - TIME_ZONE=${SMS_TZ}
+    links:
+      - postgres
+      - redis
+      - sms_app
+      - celery
+    expose:
+      - 5555
+    ports:
+      - 5555:5555
+    command:
+      flower -A sms --port=5555
+
+  nginx:
+    image: nginx
+    depends_on:
+      - sms_app
+    volumes:
+      - static_volume:/opt/www/static
+      - logs_volume:/opt/www/logs/
+    links:
+      - sms_app
+    ports:
+      - 80:80

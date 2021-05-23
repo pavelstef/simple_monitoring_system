@@ -26,3 +26,9 @@ celerybeat*
 
 # Logs
 *.log
+
+# Environment variables file
+.env*
+
+# Static files
+static/

@@ -9,7 +9,7 @@ from django.core.management import BaseCommand
 from sms_core.models import SmsUser
 
 USERNAME = environ.get('USERNAME', 'admin')
-PASSWORD = environ.get('PASSWORD', 'password')
+PASSWORD = environ.get('PASSWORD', 'password123')
 
 
 class Command(BaseCommand):

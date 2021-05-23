@@ -28,7 +28,7 @@ SECRET_KEY = environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = environ.get('DEBUG', default=True)
+DEBUG = os.environ.get('DEBUG', default=False) == 'True'  # Bool value needs more specific
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+
     'sms_core.apps.SmsCoreConfig',
 ]
 
@@ -115,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'sms_core.SmsUser'
 
 
-# Rest API Authentication methods
+# Rest API settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -123,7 +125,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 

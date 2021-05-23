@@ -8,6 +8,9 @@ python manage.py makemigrations
 python manage.py migrate --noinput
 python manage.py inituser
 
+echo '=== Preparing Static files ==='
+python manage.py collectstatic --noinput
+
 #echo '=== Run Celery ==='
 #exec celery -A sms worker -l info --logfile=./logs/celery.log -B -n celery
 
