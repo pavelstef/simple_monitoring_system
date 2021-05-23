@@ -11,14 +11,5 @@ python manage.py inituser
 echo '=== Preparing Static files ==='
 python manage.py collectstatic --noinput
 
-#echo '=== Run Celery ==='
-#exec celery -A sms worker -l info --logfile=./logs/celery.log -B -n celery
-
-#echo '=== Waiting for Celery ==='
-#sleep 2
-
-#echo '=== Run Flower ==='
-#exec flower -A sms --port=5555
-
 echo '=== Run APP ==='
 exec gunicorn --bind=0.0.0.0:8001 --workers=4 sms.wsgi
