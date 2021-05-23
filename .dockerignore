@@ -1,6 +1,5 @@
 **/venv
 **/bin
-**/migrations
 **/logs
 **/nginx
 *.log
