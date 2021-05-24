@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import environ
+from os import environ
 
-env = environ.Env()
-environ.Env.read_env()  # reading .env file
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,10 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = environ.get(
+    'SECRET_KEY',
+    default='#1q@u6zc+0zbvwx*zs(z(^5_k960()ep@56%9qq=gd$zii2**2'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = os.environ.get('DEBUG', default=False) == 'True'  # Bool value needs more specific
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+
     'sms_core.apps.SmsCoreConfig',
 ]
 
@@ -83,15 +86,12 @@ WSGI_APPLICATION = 'sms.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': env.str('DB_ENGINE', default='django.db.backends.mysql'),
-        'NAME': env.str('DB_NAME', default='sms'),
-        'USER': env.str('DB_USER', default='django'),
-        'PASSWORD': env.str('DB_PASSWORD'),
-        'HOST': env.str('DB_HOST', default='127.0.0.1'),
-        'PORT': env.str('DB_PORT', default='3306'),
-        'OPTIONS': {
-            'init_command': 'SET default_storage_engine=INNODB',
-        }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': environ.get('DB_NAME', default='sms'),
+        'USER': environ.get('DB_USER', default='sms_user'),
+        'PASSWORD': environ.get('DB_PASSWORD', default='sms_password'),
+        'HOST': environ.get('DB_HOST', default='127.0.0.1'),
+        'PORT': environ.get('DB_PORT', default='5432'),
     }
 }
 
@@ -117,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'sms_core.SmsUser'
 
 
-# Rest API Authentication methods
+# Rest API settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -125,7 +125,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 
@@ -134,7 +135,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = env.str('TIME_ZONE', default='Europe/Moscow')
+TIME_ZONE = environ.get('TIME_ZONE', default='Europe/Moscow')
 
 USE_I18N = True
 
@@ -151,16 +152,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Redis configuration
-REDIS_HOST = env.str('REDIS_HOST', default='127.0.0.1')
-REDIS_PORT = env.str('REDIS_PORT', default='6379')
+REDIS_HOST = environ.get('REDIS_HOST', default='127.0.0.1')
+REDIS_PORT = environ.get('REDIS_PORT', default='6379')
+REDIS_DB_NUM = environ.get('REDIS_DB_NUM', default='0')
 
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB_NUM}'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB_NUM}'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = env.str('TIME_ZONE', default='Europe/Moscow')
+CELERY_TIMEZONE = TIME_ZONE
 CELERY_IGNORE_RESULT = True
 

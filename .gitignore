@@ -5,6 +5,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 .venv/
+/venv/
 
 # IDE
 .idea
@@ -20,3 +21,16 @@ _env
 
 # Coverage
 .coverage
+
+# Celery
+celerybeat*
+
+# Logs
+*.log
+
+# Environment variables file
+.env*
+
+# Static files
+/static/
+

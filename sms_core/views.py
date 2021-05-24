@@ -37,7 +37,7 @@ class ObjectListMixin:
         else:
             if self.model == SmsUser:
                 # Getting only active users.
-                objs = self.model.objects.filter(is_active__iexact=1)
+                objs = self.model.objects.filter(is_active=True)
             else:
                 objs = self.model.objects.all()
         context = {
@@ -63,21 +63,17 @@ class ObjectCreateMixin:
 
         if bound_form.is_valid():
             if self.form_model == DeviceForm:
-                user = SmsUser.objects.get(name__iexact=request.user)
                 complete_form = bound_form.save(commit=False)
-                complete_form.updated_by = user
+                complete_form.updated_by = request.user
                 complete_form.save()
                 # Run Celery task
                 task_device_check_after_update.delay((complete_form.name), )
-                del user
-                del complete_form
             else:
                 bound_form.save()
             context = {'form': self.form_model(), 'success': True}
         else:
             context = {'form': bound_form, 'success': False}
 
-        del bound_form
         return render(request, self.template, context=context)
 
 
@@ -105,22 +101,17 @@ class ObjectEditMixin:
 
         if bound_form.is_valid():
             if self.form_model == DeviceForm:
-                user = SmsUser.objects.get(name__iexact=request.user)
                 complete_form = bound_form.save(commit=False)
-                complete_form.updated_by = user
+                complete_form.updated_by = request.user
                 complete_form.save()
                 # Run Celery task
                 task_device_check_after_update.delay((complete_form.name), )
-                del user
-                del complete_form
             else:
                 bound_form.save()
             context.update({'form': bound_form, 'success': True})
         else:
             context.update({'form': bound_form, 'success': False})
 
-        del obj
-        del bound_form
         return render(request, self.template, context=context)
 
 
@@ -145,14 +136,16 @@ class ObjectDeleteMixin:
             # A user with administrator rights cannot be deleted if he is the
             # last one.
             if obj.is_staff and \
-                    (self.model.objects.filter(is_active__iexact=1,
-                                               is_staff__iexact=1).count() <= 1):
+                    (self.model.objects.filter(
+                        is_active=True,
+                        is_staff=True
+                    ).count() <= 1):
                 pass
             else:
                 obj.set_deleted()
         else:
             obj.delete()
-        del obj
+
         return redirect(reverse(self.redirect_url))
 
 
