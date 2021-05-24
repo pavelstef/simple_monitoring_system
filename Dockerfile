@@ -10,3 +10,6 @@ WORKDIR /opt/sms_app/
 COPY . /opt/sms_app/
 RUN pip3 install pip --upgrade && pip install --no-cache-dir -r requirements.txt
 RUN chmod a+x ./run.sh
+
+# Ports
+EXPOSE 8001

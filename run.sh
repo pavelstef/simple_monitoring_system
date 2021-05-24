@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo '=== Waiting for DB ==='
-sleep 5
+sleep 2
 
 echo '=== Preparing DB ==='
 python manage.py makemigrations

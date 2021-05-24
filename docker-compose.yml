@@ -23,9 +23,8 @@ services:
     ports:
       - 6379:6379
 
-  sms_app:
+  app:
     build: .
-    image: sms_app:latest
     depends_on:
       - postgres
       - redis
@@ -53,11 +52,10 @@ services:
 
   celery:
     build: .
-    image: sms_celery:latest
     depends_on:
       - postgres
       - redis
-      - sms_app
+      - app
     volumes:
       - logs_volume:/opt/sms_app/logs
     environment:
@@ -73,17 +71,16 @@ services:
     links:
       - postgres
       - redis
-      - sms_app
+      - app
     command:
       celery -A sms worker -l info --logfile=./logs/celery.log -B -n celery
 
   flower:
     build: .
-    image: sms_flower:latest
     depends_on:
       - postgres
       - redis
-      - sms_app
+      - app
       - celery
     volumes:
       - logs_volume:/opt/sms_app/logs
@@ -100,7 +97,7 @@ services:
     links:
       - postgres
       - redis
-      - sms_app
+      - app
       - celery
     expose:
       - 5555
@@ -110,13 +107,13 @@ services:
       flower -A sms --port=5555
 
   nginx:
-    image: nginx
+    build: ./nginx
     depends_on:
-      - sms_app
+      - app
     volumes:
       - static_volume:/opt/www/static
       - logs_volume:/opt/www/logs/
     links:
-      - sms_app
+      - app
     ports:
       - 80:80
